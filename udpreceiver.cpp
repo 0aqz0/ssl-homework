@@ -6,7 +6,7 @@ UDPReceiver::UDPReceiver(QObject* parent) : QObject(parent)
     receiver = new QUdpSocket();
     receiver->bind(QHostAddress::LocalHost, 23333);
     connect(receiver, SIGNAL(readyRead()), this, SLOT(readDatagrams()));
-    qDebug() << "I'm Receiver";
+    // qDebug() << "I'm Receiver";
 }
 
 UDPReceiver::~UDPReceiver(){
