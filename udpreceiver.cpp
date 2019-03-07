@@ -1,5 +1,5 @@
 #include "udpreceiver.h"
-#include "vision_detection.pb.h"
+#include "proto/vision_detection.pb.h"
 
 UDPReceiver::UDPReceiver(QObject* parent) : QObject(parent)
 {

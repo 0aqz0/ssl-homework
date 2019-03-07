@@ -2,6 +2,7 @@
 #define UDPRECEIVER_H
 
 #include <QtNetwork>
+#include "utils/singleton.hpp"
 
 class UDPReceiver : public QObject
 {
@@ -14,5 +15,6 @@ private:
 private slots:
     void readDatagrams();
 };
+typedef Singleton<UDPReceiver> VisionReceiver;
 
 #endif // UDPRECEIVER_H

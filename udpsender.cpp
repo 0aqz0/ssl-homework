@@ -1,5 +1,5 @@
 #include "udpsender.h"
-#include "grSim_Packet.pb.h"
+#include "proto/grSim_Packet.pb.h"
 
 namespace {
     int port = 23333;
@@ -25,9 +25,9 @@ void UDPSender::sendCommand()
     robot_command->set_id(0);
     robot_command->set_kickspeedx(0);
     robot_command->set_kickspeedz(0);
-    robot_command->set_veltangent(0);
+    robot_command->set_veltangent(5);
     robot_command->set_velnormal(0);
-    robot_command->set_velangular(5);
+    robot_command->set_velangular(0);
     robot_command->set_spinner(0);
     robot_command->set_wheelsspeed(false);
     int size = packet.ByteSize();

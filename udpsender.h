@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QtNetwork>
+#include "utils/singleton.hpp"
 
 class UDPSender : public QObject
 {
@@ -14,5 +15,6 @@ public:
 private:
     QUdpSocket* sender;
 };
+typedef Singleton<UDPSender> CommandSender;
 
 #endif // UDPSENDER_H

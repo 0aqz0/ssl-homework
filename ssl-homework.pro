@@ -16,19 +16,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += main.cpp \
     udpreceiver.cpp \
-    vision_detection.pb.cc \
-    grSim_Commands.pb.cc \
-    grSim_Packet.pb.cc \
-    grSim_Replacement.pb.cc \
+    proto\vision_detection.pb.cc \
+    proto\grSim_Commands.pb.cc \
+    proto\grSim_Packet.pb.cc \
+    proto\grSim_Replacement.pb.cc \
     udpsender.cpp
 
 HEADERS += \
     udpreceiver.h \
-    vision_detection.pb.h \
-    grSim_Commands.pb.h \
-    grSim_Packet.pb.h \
-    grSim_Replacement.pb.h \
-    udpsender.h
+    proto\vision_detection.pb.h \
+    proto\grSim_Commands.pb.h \
+    proto\grSim_Packet.pb.h \
+    proto\grSim_Replacement.pb.h \
+    udpsender.h \
+    utils/singleton.hpp
 
 INCLUDEPATH += \
     C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\include \
