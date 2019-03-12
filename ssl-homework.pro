@@ -20,7 +20,8 @@ SOURCES += main.cpp \
     proto\grSim_Commands.pb.cc \
     proto\grSim_Packet.pb.cc \
     proto\grSim_Replacement.pb.cc \
-    udpsender.cpp
+    udpsender.cpp \
+    datamanager.cpp
 
 HEADERS += \
     udpreceiver.h \
@@ -29,7 +30,8 @@ HEADERS += \
     proto\grSim_Packet.pb.h \
     proto\grSim_Replacement.pb.h \
     udpsender.h \
-    utils/singleton.hpp
+    utils/singleton.hpp \
+    datamanager.h
 
 INCLUDEPATH += \
     C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\include \

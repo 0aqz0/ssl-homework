@@ -17,4 +17,5 @@ private slots:
 };
 typedef Singleton<UDPReceiver> VisionReceiver;
 
+
 #endif // UDPRECEIVER_H
