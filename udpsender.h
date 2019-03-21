@@ -11,7 +11,7 @@ class UDPSender : public QObject
 public:
     explicit UDPSender(QObject *parent = nullptr);
     ~UDPSender();
-    void sendCommand();
+    void sendToSim(int robot_id=0, double vel_x=0, double vel_y=0, double vel_w=0);
 private:
     QUdpSocket* sender;
 };

@@ -10,6 +10,7 @@ UDPReceiver::UDPReceiver(QObject* parent) : QObject(parent)
 {
     receiver = new QUdpSocket();
     receiver->bind(QHostAddress::AnyIPv4, port, QUdpSocket::ShareAddress);
+//    receiver->joinMulticastGroup(QHostAddress("224.5.23.2"));
     connect(receiver, SIGNAL(readyRead()), this, SLOT(readDatagrams()), Qt::DirectConnection);
 //     qDebug() << "I'm Receiver";
 }

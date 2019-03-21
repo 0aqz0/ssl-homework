@@ -1,4 +1,5 @@
 QT += gui network
+QT += serialport
 
 CONFIG += c++11 console
 CONFIG -= app_bundle
@@ -21,7 +22,10 @@ SOURCES += main.cpp \
     proto\grSim_Packet.pb.cc \
     proto\grSim_Replacement.pb.cc \
     udpsender.cpp \
-    datamanager.cpp
+    datamanager.cpp \
+    algorithm/pathplanner.cpp \
+    proto/zss_debug.pb.cc \
+    serialsender.cpp
 
 HEADERS += \
     udpreceiver.h \
@@ -31,7 +35,10 @@ HEADERS += \
     proto\grSim_Replacement.pb.h \
     udpsender.h \
     utils/singleton.hpp \
-    datamanager.h
+    datamanager.h \
+    algorithm/pathplanner.h \
+    proto/zss_debug.pb.h \
+    serialsender.h
 
 INCLUDEPATH += \
     C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\include \
