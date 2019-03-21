@@ -21,7 +21,9 @@ SOURCES += main.cpp \
     proto\grSim_Packet.pb.cc \
     proto\grSim_Replacement.pb.cc \
     udpsender.cpp \
-    datamanager.cpp
+    datamanager.cpp \
+    artifical_potential.cpp \
+    mymath.cpp
 
 HEADERS += \
     udpreceiver.h \
@@ -31,12 +33,14 @@ HEADERS += \
     proto\grSim_Replacement.pb.h \
     udpsender.h \
     utils/singleton.hpp \
-    datamanager.h
+    datamanager.h \
+    artifical_potential.h \
+    mymath.h
 
 INCLUDEPATH += \
-    C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\include \
-#    ..\protobuf\protobuf\include
+#    C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\include \
+    ..\protobuf\include
 
 LIBS += \
-    C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\lib\x64\libprotobuf.lib \
-#    ..\protobuf\protobuf\lib\x64\libprotobuf.lib
+#    C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\lib\x64\libprotobuf.lib \
+    ..\protobuf\lib\x86\libprotobuf.lib
