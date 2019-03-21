@@ -3,6 +3,8 @@
 #include "udpsender.h"
 #include "serialsender.h"
 #include <thread>
+#include "mymath.h"
+#include <iostream>
 
 void loop()
 {
@@ -16,12 +18,19 @@ void loop()
     }
 }
 
+
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     VisionReceiver::instance();
 
     std::thread* _thread = new std::thread([ = ] {loop();});
+
+    MyPoint p1(4, 6);
+    MyPoint p2(2, 3);
+    MyVector v1 = p2 - p1;
+    std::cout << "[main.cpp] v1: " << v1.x() << ", "
+              << v1.y() << std::endl;
 
     return a.exec();
 }

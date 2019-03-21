@@ -25,7 +25,9 @@ SOURCES += main.cpp \
     datamanager.cpp \
     algorithm/pathplanner.cpp \
     proto/zss_debug.pb.cc \
-    serialsender.cpp
+    serialsender.cpp \
+    artifical_potential.cpp \
+    mymath.cpp
 
 HEADERS += \
     udpreceiver.h \
@@ -38,12 +40,14 @@ HEADERS += \
     datamanager.h \
     algorithm/pathplanner.h \
     proto/zss_debug.pb.h \
-    serialsender.h
+    serialsender.h \
+    artifical_potential.h \
+    mymath.h
 
 INCLUDEPATH += \
     C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\include \
-#    ..\protobuf\protobuf\include
+#    ..\protobuf\include
 
 LIBS += \
     C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\lib\x64\libprotobuf.lib \
-#    ..\protobuf\protobuf\lib\x64\libprotobuf.lib
+#    ..\protobuf\lib\x86\libprotobuf.lib
