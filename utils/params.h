@@ -7,6 +7,13 @@ namespace PARAMS {
     const bool IS_SIMULATION = true;
     const double ACCEPT_RADIUS = 5.0;
 
+    // data manager
+    const int ROBOT_NUM = 16;
+
+    // our car
+    const int our_id = 0;
+    const bool isBlue = true;
+
     // serial sender
     const QString serialPort = "COM7";
     const int frequency = 0;

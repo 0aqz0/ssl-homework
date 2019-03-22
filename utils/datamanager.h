@@ -1,6 +1,7 @@
 #ifndef DATAMANAGER_H
 #define DATAMANAGER_H
 #include "utils/singleton.hpp"
+#include "utils/params.h"
 
 struct BallInfo
 {
@@ -30,10 +31,11 @@ class DataManager
 public:
     DataManager();
     BallInfo ball;
-    RobotInfo blueRobots[16];            // need improve!!!
-    RobotInfo yellowRobots[16];
-    bool validBlueRobots[16];
-    bool validYellowRobots[16];
+    RobotInfo blueRobots[PARAMS::ROBOT_NUM];
+    RobotInfo yellowRobots[PARAMS::ROBOT_NUM];
+    bool validBlueRobots[PARAMS::ROBOT_NUM];
+    bool validYellowRobots[PARAMS::ROBOT_NUM];
+    RobotInfo& ourRobot();
     void reset();
 };
 typedef Singleton<DataManager> MyDataManager;
