@@ -1,7 +1,8 @@
 #include <QCoreApplication>
-#include "udpreceiver.h"
-#include "udpsender.h"
-#include "serialsender.h"
+#include "communication/udpreceiver.h"
+#include "communication/udpsender.h"
+#include "communication/serialsender.h"
+#include "utils/datamanager.h"
 #include <thread>
 #include "mymath.h"
 #include <iostream>

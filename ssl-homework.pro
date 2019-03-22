@@ -16,31 +16,31 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += main.cpp \
-    udpreceiver.cpp \
+    communication\udpreceiver.cpp \
     proto\vision_detection.pb.cc \
     proto\grSim_Commands.pb.cc \
     proto\grSim_Packet.pb.cc \
     proto\grSim_Replacement.pb.cc \
-    udpsender.cpp \
-    datamanager.cpp \
+    communication\udpsender.cpp \
+    utils/datamanager.cpp \
     algorithm/pathplanner.cpp \
     proto/zss_debug.pb.cc \
-    serialsender.cpp \
+    communication\serialsender.cpp \
     artifical_potential.cpp \
     mymath.cpp
 
 HEADERS += \
-    udpreceiver.h \
+    communication\udpreceiver.h \
     proto\vision_detection.pb.h \
     proto\grSim_Commands.pb.h \
     proto\grSim_Packet.pb.h \
     proto\grSim_Replacement.pb.h \
-    udpsender.h \
+    communication\udpsender.h \
     utils/singleton.hpp \
-    datamanager.h \
+    utils/datamanager.h \
     algorithm/pathplanner.h \
     proto/zss_debug.pb.h \
-    serialsender.h \
+    communication\serialsender.h \
     artifical_potential.h \
     mymath.h
 
