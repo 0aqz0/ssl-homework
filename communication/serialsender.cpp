@@ -1,15 +1,11 @@
 #include "serialsender.h"
 #include <QDebug>
-namespace {
-    QString portName = "COM7";
-    const int TRANSMIT_PACKET_SIZE = 25;
-    int frequency = 0;
-}
+#include "utils/params.h"
 
 serialSender::serialSender()
-    : startPacket1(TRANSMIT_PACKET_SIZE,0)
-    , startPacket2(TRANSMIT_PACKET_SIZE,0)
-    , transmitPacket(TRANSMIT_PACKET_SIZE,0)
+    : startPacket1(PARAMS::TRANSMIT_PACKET_SIZE,0)
+    , startPacket2(PARAMS::TRANSMIT_PACKET_SIZE,0)
+    , transmitPacket(PARAMS::TRANSMIT_PACKET_SIZE,0)
 {
     startPacket1[0] = 0xff;
     startPacket1[1] = 0xb0;
@@ -17,21 +13,19 @@ serialSender::serialSender()
     startPacket1[3] = 0x02;
     startPacket1[4] = 0x03;
     startPacket1[24] = 0x31;
-//    startPacket1[TRANSMIT_PACKET_SIZE - 1] = CCrc8::calc((unsigned char*)(startPacket1.data()), TRANSMIT_PACKET_SIZE - 1);
 
     startPacket2[0] = 0xff;
     startPacket2[1] = 0xb0;
     startPacket2[2] = 0x04;
     startPacket2[3] = 0x05;
     startPacket2[4] = 0x06;
-    startPacket2[5] = 0x10 + frequency;
+    startPacket2[5] = 0x10 + PARAMS::frequency;
     startPacket2[24] = 0x85;
-//    startPacket2[TRANSMIT_PACKET_SIZE - 1] = CCrc8::calc((unsigned char*)(startPacket2.data()), TRANSMIT_PACKET_SIZE - 1);
 }
 
 void serialSender::openSerialPort()
 {
-    serial.setPortName(portName);
+    serial.setPortName(PARAMS::serialPort);
     serial.setBaudRate(QSerialPort::Baud115200);
     serial.setDataBits(QSerialPort::Data8);
     serial.setParity(QSerialPort::NoParity);
@@ -53,7 +47,7 @@ void serialSender::closeSerialPort()
 
 void serialSender::sendStartPacket()
 {
-    serial.write(startPacket1.data(), TRANSMIT_PACKET_SIZE);
+    serial.write(startPacket1.data(), PARAMS::TRANSMIT_PACKET_SIZE);
     serial.flush();
     if (serial.waitForBytesWritten(2000)){
         if (serial.waitForReadyRead(2000)){
@@ -66,13 +60,13 @@ void serialSender::sendStartPacket()
         qDebug() << "start packet time out!!!";
     qDebug() << "0x" << startPacket1.toHex();
     qDebug() << "0x" << startPacket2.toHex();
-    serial.write(startPacket2.data(), TRANSMIT_PACKET_SIZE);
+    serial.write(startPacket2.data(), PARAMS::TRANSMIT_PACKET_SIZE);
     serial.flush();
 }
 
 void serialSender::encode(int robot_id, int vel_x, int vel_y, int vel_w, bool ctrl, bool shootMode, int ctrlPowerLevel)
 {
-    for (int i=0; i<TRANSMIT_PACKET_SIZE; i++){
+    for (int i=0; i<PARAMS::TRANSMIT_PACKET_SIZE; i++){
         transmitPacket[i] = 0x00;
     }
     transmitPacket[0] = 0xff;
@@ -116,6 +110,6 @@ void serialSender::sendToReal(int robot_id, int vel_x, int vel_y, int vel_w)
 {
     encode(robot_id, vel_x, vel_y, vel_w);
     qDebug() << "0x" << transmitPacket.toHex();
-    serial.write(transmitPacket.data(), TRANSMIT_PACKET_SIZE);
+    serial.write(transmitPacket.data(), PARAMS::TRANSMIT_PACKET_SIZE);
     serial.flush();
 }

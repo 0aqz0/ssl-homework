@@ -1,10 +1,7 @@
 #include "udpsender.h"
 #include "proto/grSim_Packet.pb.h"
 #include "proto/zss_debug.pb.h"
-
-namespace {
-    int port = 23333;
-}
+#include "utils/params.h"
 
 UDPSender::UDPSender(QObject *parent) : QObject(parent)
 {
@@ -34,7 +31,7 @@ void UDPSender::sendToSim(int robot_id, double vel_x, double vel_y, double vel_w
     int size = packet.ByteSize();
     QByteArray data(size, 0);
     packet.SerializePartialToArray(data.data(), data.size());
-    sender->writeDatagram(data, size, QHostAddress("127.0.0.1"), 20011);
+    sender->writeDatagram(data, size, PARAMS::simAddress, PARAMS::simPort);
 
 //    ZSS::Protocol::Debug_Msgs msgs;
 //    ZSS::Protocol::Debug_Msg* msg = msgs.add_msgs();

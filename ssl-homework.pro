@@ -42,7 +42,8 @@ HEADERS += \
     proto/zss_debug.pb.h \
     communication\serialsender.h \
     artifical_potential.h \
-    mymath.h
+    mymath.h \
+    utils/params.h
 
 INCLUDEPATH += \
     C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\include \
