@@ -26,8 +26,8 @@ SOURCES += main.cpp \
     algorithm/pathplanner.cpp \
     proto/zss_debug.pb.cc \
     communication\serialsender.cpp \
-    artifical_potential.cpp \
-    mymath.cpp
+    algorithm/artifical_potential.cpp \
+    utils/mymath.cpp
 
 HEADERS += \
     communication\udpreceiver.h \
@@ -41,14 +41,14 @@ HEADERS += \
     algorithm/pathplanner.h \
     proto/zss_debug.pb.h \
     communication\serialsender.h \
-    artifical_potential.h \
-    mymath.h \
+    algorithm/artifical_potential.h \
+    utils/mymath.h \
     utils/params.h
 
 INCLUDEPATH += \
-    C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\include \
-#    ..\protobuf\include
+#    C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\include \
+    ..\protobuf\include
 
 LIBS += \
-    C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\lib\x64\libprotobuf.lib \
-#    ..\protobuf\lib\x86\libprotobuf.lib
+#    C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\lib\x64\libprotobuf.lib \
+    ..\protobuf\lib\x86\libprotobuf.lib

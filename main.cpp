@@ -4,7 +4,7 @@
 #include "communication/serialsender.h"
 #include "utils/datamanager.h"
 #include <thread>
-#include "mymath.h"
+#include "utils/mymath.h"
 #include <iostream>
 
 void loop()
