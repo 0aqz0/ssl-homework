@@ -30,4 +30,17 @@ private:
     float _y;
 };
 
+class Node {
+public:
+    Node(int x, int y,int parent=-1, double cost=0) {
+        this->x = x;
+        this->y = y;
+        this->parent = parent;
+        cost = 0.0;
+    }
+    int x, y;
+    int parent;
+    double cost;
+};
+
 #endif // MYMATH_H

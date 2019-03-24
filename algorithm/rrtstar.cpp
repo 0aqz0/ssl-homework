@@ -2,15 +2,15 @@
 
 void RRTStar::plan(unsigned char *costs, float *potential, double start_x, double start_y, double end_x, double end_y, std::vector<std::pair<float, float> > &path)
 {
-    int ns = xs_ * ys_;
-    long POT_HIGH = 1e10;
+//    int ns = xs_ * ys_;
+//    long POT_HIGH = 1e10;
 
     // exploration
     NodeList.clear();
-    NodeList.push_back(rrtStarNode(start_x, start_y, -1));
+    NodeList.push_back(Node(start_x, start_y));
 
-    std::fill(potential, potential + ns, POT_HIGH);
-    potential[getIndex(start_x, start_y)] = 0;
+//    std::fill(potential, potential + ns, POT_HIGH);
+//    potential[getIndex(start_x, start_y)] = 0;
 
     int cycle = 0;
     int cycles = 1e4;
@@ -106,8 +106,8 @@ void RRTStar::plan(unsigned char *costs, float *potential, double start_x, doubl
             }
         }
 
-        potential[getIndex(newNode_x, newNode_y)] = potential[getIndex(NodeList[nearestNode].x, NodeList[nearestNode].y)] + 1;
-        NodeList.push_back(rrtStarNode(newNode_x, newNode_y, newNode_parent));
+//        potential[getIndex(newNode_x, newNode_y)] = potential[getIndex(NodeList[nearestNode].x, NodeList[nearestNode].y)] + 1;
+        NodeList.push_back(Node(newNode_x, newNode_y, newNode_parent));
         NodeList.back().cost = newNode_cost;
         // rewire
         for (int i = 0; i < nnearinds; ++i)
@@ -173,7 +173,7 @@ int RRTStar::findNearestNode(int x, int y)
     return nearest_index;
 }
 
-void RRTStar::pathSmoothing()
+void RRTStar::pathSmooth()
 {
 
 }

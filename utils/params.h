@@ -31,6 +31,11 @@ namespace PARAMS {
     const double FARWARD_ANGLE_THRESHOLD = 0.5;
     const double ROTATE_COFF = 1.0;
 
+    // RRT
+    namespace RRT {
+
+    }
+
     // math constant
     namespace MATH {
         const double PI = 3.14159265359;

@@ -28,7 +28,8 @@ SOURCES += main.cpp \
     communication\serialsender.cpp \
     algorithm/artifical_potential.cpp \
     utils/mymath.cpp \
-    algorithm/rrtstar.cpp
+    algorithm/rrtstar.cpp \
+    algorithm/rrt.cpp
 
 HEADERS += \
     communication\udpreceiver.h \
@@ -45,7 +46,8 @@ HEADERS += \
     algorithm/artifical_potential.h \
     utils/mymath.h \
     utils/params.h \
-    algorithm/rrtstar.h
+    algorithm/rrtstar.h \
+    algorithm/rrt.h
 
 INCLUDEPATH += \
     ..\protobuf\include
