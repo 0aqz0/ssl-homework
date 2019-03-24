@@ -22,7 +22,7 @@ void UDPReceiver::readDatagrams(){
         datagram.resize(receiver->pendingDatagramSize());
         receiver->readDatagram(datagram.data(), datagram.size());
         // qDebug() << "Receiving: " << datagram.data();
-        qDebug() << "Receiving data!!!";
+        // qDebug() << "Receiving data!!!";
 
         // Parse from datagram
         Vision_DetectionFrame vision;
@@ -48,8 +48,8 @@ void UDPReceiver::readDatagrams(){
             MyDataManager::instance()->validBlueRobots[robot_id] = true;
             // qDebug() << "DDQ debuging";
             MyDataManager::instance()->blueRobots[robot_id].robot_id = robot_id;
-            MyDataManager::instance()->blueRobots[robot_id].x = vision.robots_blue(i).x();
-            MyDataManager::instance()->blueRobots[robot_id].y = vision.robots_blue(i).y();
+            MyDataManager::instance()->blueRobots[robot_id].x = vision.robots_blue(i).x()/10;
+            MyDataManager::instance()->blueRobots[robot_id].y = -vision.robots_blue(i).y()/10;
             if (vision.robots_blue(i).has_orientation())
                 MyDataManager::instance()->blueRobots[robot_id].orientation = vision.robots_blue(i).orientation();
             else
