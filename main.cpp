@@ -3,8 +3,9 @@
 #include "communication/udpsender.h"
 #include "communication/serialsender.h"
 #include "utils/datamanager.h"
-#include <thread>
 #include "utils/mymath.h"
+#include "algorithm/pathplanner.h"
+#include <thread>
 #include <iostream>
 
 void loop()
@@ -16,6 +17,7 @@ void loop()
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 //        qDebug() << "in the thread!";
 //        RealCommandSender::instance()->sendToReal(0, 100, 0, 0);
+        Planner::instance()->plan();
     }
 }
 

@@ -1,29 +1,27 @@
 #ifndef PATHPLANNER_H
 #define PATHPLANNER_H
-#include <vector>
+#include <deque>
 #include "communication/udpsender.h"
 #include "communication/serialsender.h"
 #include "utils/datamanager.h"
+#include "utils/singleton.hpp"
+#include "utils/mymath.h"
 
-class Point
-{
-public:
-    Point(int x=0, int y=0) : _x(x), _y(y) {}
-    int x() const { return _x; }
-    int y() const { return _y; }
-private:
-    int _x;
-    int _y;
-};
+/**************************************************************/
+/*                         速度规划                            */
+/*          Description: 作为将路径点转换为具体下发速度的API       */
+/**************************************************************/
 
 class PathPlanner
 {
 public:
     PathPlanner();
     void plan();
-    bool hasArrived(Point target);
+    bool hasArrived(MyPoint target);
+    void rotateToPoint(MyPoint target);
 private:
-    std::vector<Point> path;
+    std::deque<MyPoint> path;
 };
+typedef Singleton<PathPlanner> Planner;
 
 #endif // PATHPLANNER_H

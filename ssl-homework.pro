@@ -27,7 +27,8 @@ SOURCES += main.cpp \
     proto/zss_debug.pb.cc \
     communication\serialsender.cpp \
     algorithm/artifical_potential.cpp \
-    utils/mymath.cpp
+    utils/mymath.cpp \
+    algorithm/rrtstar.cpp
 
 HEADERS += \
     communication\udpreceiver.h \
@@ -43,12 +44,11 @@ HEADERS += \
     communication\serialsender.h \
     algorithm/artifical_potential.h \
     utils/mymath.h \
-    utils/params.h
+    utils/params.h \
+    algorithm/rrtstar.h
 
 INCLUDEPATH += \
-#    C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\include \
     ..\protobuf\include
 
 LIBS += \
-#    C:\Users\0AQZ0\Desktop\homework\protobuf\protobuf\lib\x64\libprotobuf.lib \
     ..\protobuf\lib\x86\libprotobuf.lib
