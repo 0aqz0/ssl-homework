@@ -19,9 +19,13 @@ public:
     void plan();
     bool hasArrived(MyPoint target);
     void rotateToPoint(MyPoint target);
+    void goToPoint(MyPoint target);
+    void stopMoving();
+    void updatePath(std::vector<Node> &nodePath);
+    void updatePath(std::vector<MyPoint> &pointPath);
 private:
     std::deque<MyPoint> path;
 };
-typedef Singleton<PathPlanner> Planner;
+typedef Singleton<PathPlanner> LocalPlanner;
 
 #endif // PATHPLANNER_H

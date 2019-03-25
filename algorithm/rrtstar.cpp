@@ -1,170 +1,131 @@
 #include "rrtstar.h"
+#include "utils/params.h"
+#include <QRandomGenerator>
 
-void RRTStar::plan(unsigned char *costs, float *potential, double start_x, double start_y, double end_x, double end_y, std::vector<std::pair<float, float> > &path)
+void RRTStar::plan(double start_x, double start_y, double end_x, double end_y)
 {
-//    int ns = xs_ * ys_;
-//    long POT_HIGH = 1e10;
+    // exploration
+    NodeList.clear();
+    NodeList.push_back(Node(start_x, start_y));
 
-//    // exploration
-//    NodeList.clear();
-//    NodeList.push_back(Node(start_x, start_y));
+    int iter = 0;
 
-//    std::fill(potential, potential + ns, POT_HIGH);
-//    potential[getIndex(start_x, start_y)] = 0;
+    while (iter < PARAMS::RRTStar::ITERATIONS) {
+        // random sampling
+        Node randNode = randomSample(PARAMS::RRTStar::EPSILON, end_x, end_y);
+        // Find the nearest node
+        int nearestNode = findNearestNode(randNode.x, randNode.y);
+        // expand the tree
+        double theta = atan2(randNode.y - NodeList[nearestNode].y, randNode.x - NodeList[nearestNode].x);
+        int newNode_x = NodeList[nearestNode].x + PARAMS::RRTStar::STEP_SIZE*cos(theta);
+        int newNode_y = NodeList[nearestNode].y + PARAMS::RRTStar::STEP_SIZE*sin(theta);
+        double newNode_cost = NodeList[nearestNode].cost + PARAMS::RRTStar::STEP_SIZE;
+        int newNode_parent = nearestNode;
 
-//    int cycle = 0;
-//    int cycles = 1e4;
-//    int stepsize = 5;
+        // outside the map
+        if (newNode_x <= -PARAMS::FIELD::LENGTH/2 || newNode_y <= -PARAMS::FIELD::WIDTH/2 || newNode_x >= PARAMS::FIELD::LENGTH/2 || newNode_y >= PARAMS::FIELD::WIDTH/2)
+            continue;
+        // in the closed list
+        if (inNodeList(newNode_x, newNode_y))
+            continue;
+        // obstacles
+        // TODO
 
-//    int rand_x, rand_y;
+        // choose best parent
+        double radius = PARAMS::RRTStar::GAMMA*sqrt(log(NodeList.size())/NodeList.size());
+        int bestParent = chooseBestParent(newNode_x, newNode_y, radius, newNode_cost);
+        if(bestParent>=0){
+            newNode_parent = bestParent;
+            newNode_cost = NodeList[newNode_parent].cost + sqrt(pow(NodeList[newNode_parent].y - newNode_y, 2)+pow(NodeList[newNode_parent].x - newNode_x, 2));
+        }
+        Node newNode = Node(newNode_x, newNode_y, newNode_parent, newNode_cost);
+        NodeList.push_back(newNode);
 
-//    std::default_random_engine generator;
-//    std::uniform_int_distribution<int> distribution(1800,2200);
-//    while (cycle < cycles) {
-//        // random sampling
-//        if(rand()%100 >= 5){
-//            rand_x = distribution(generator);
-//            rand_y = distribution(generator);
-//        }else{
-//            rand_x = end_x;
-//            rand_y = end_y;
-//        }
+        // rewire
+        rewire(newNode, radius);
 
-//        // Find the nearest node
-//        int nearestNode = findNearestNode(rand_x, rand_y);
+        if (sqrt(pow(newNode_x-end_x, 2) + pow(newNode_y-end_y, 2)) < PARAMS::RRTStar::STEP_SIZE)
+            break;
+        iter++;
+    }
+    // generate the final path
+    std::vector<MyPoint> tempPath;
+    tempPath.clear();
+    tempPath.push_back(MyPoint(end_x, end_y));
+    int currentNode = NodeList.back().parent;
+    while(currentNode>=0){
+        tempPath.push_back(MyPoint(NodeList[currentNode].x, NodeList[currentNode].y));
+        currentNode = NodeList[currentNode].parent;
+    }
+    // invert the path
+    finalPath.clear();
+    while(tempPath.size()){
+        finalPath.push_back(tempPath.back());
+        tempPath.pop_back();
+    }
+    for(int i=0; i<finalPath.size();i++){
+        qDebug() << finalPath[i].x() << finalPath[i].y();
+    }
+}
 
-//        // expand the tree
-//        float theta = atan2(rand_y - NodeList[nearestNode].y, rand_x - NodeList[nearestNode].x)*180/3.14;
+int RRTStar::chooseBestParent(int x, int y, double radius, double old_cost)
+{
+    // find near nodes
+    std::vector<Node> nearNodes;
+    std::vector<int> nearNodesIndex;
+    nearNodes.clear();
+    nearNodesIndex.clear();
+    int bestParent = -1;
+    for(int i=0; i<NodeList.size(); i++){
+        if(pow(NodeList[i].x - x, 2)+pow(NodeList[i].y - y, 2) < pow(radius, 2)){
+            nearNodes.push_back(NodeList[i]);
+            nearNodesIndex.push_back(i);
+        }
+    }
+    // choose best parent
+    if(nearNodes.size()){
+        for (int i=0; i<nearNodes.size(); i++)
+        {
+            double new_cost = nearNodes[i].cost + sqrt(pow(nearNodes[i].y - y, 2) + pow(nearNodes[i].x - x, 2));
+            // check collision
+            // TODO
+            // if collision, continue
 
-//        int newNode_x = NodeList[nearestNode].x + stepsize*cos(theta);
-//        int newNode_y = NodeList[nearestNode].y + stepsize*sin(theta);
-//        float newNode_cost = NodeList[nearestNode].cost + stepsize;
-//        int newNode_parent = nearestNode;
+            if(new_cost < old_cost){
+                bestParent = nearNodesIndex[i];
+                old_cost = new_cost;
+            }
+        }
+    }
+    return bestParent;
+}
 
-//        // outside the map
-//        if (newNode_x < 0 || newNode_y < 0 || newNode_x >= xs_ || newNode_y >= ys_)
-//            continue;
-//        // in the closed list
-//        if (potential[getIndex(newNode_x, newNode_y)] < POT_HIGH)
-//            continue;
-//        // obstacles
-//        if (costs[getIndex(newNode_x, newNode_y)] > 0)
-//            continue;
-//        if(costs[getIndex(newNode_x, newNode_y)]>=lethal_cost_)
-//            continue;
-
-//        // find near nodes
-//        int nearinds[200];
-//        float dlist[200];
-//        int nnearinds = 0;
-//        float r = 200.0*sqrt(log(NodeList.size())/NodeList.size());
-
-//        for(int i=0; i<NodeList.size();i++){
-//            if(pow(NodeList[i].x-newNode_x,2)+pow(NodeList[i].y-newNode_y,2)<pow(r,2)){
-//                nearinds[nnearinds] = i;
-//                nnearinds++;
-//            }
-//        }
-
-//        // choose best parent
-//        if(nnearinds!=0){
-//            for (int i = 0; i < nnearinds; ++i)
-//            {
-//                int dx = newNode_x-NodeList[nearinds[i]].x;
-//                int dy = newNode_y-NodeList[nearinds[i]].y;
-//                int d = sqrt(pow(dx,2)+pow(dy,2));
-//                float theta = atan2(dy,dx);
-//                // check collision
-//                dlist[i] = NodeList[nearinds[i]].cost+d;
-//                int tempNode_x = NodeList[nearinds[i]].x;
-//                int tempNode_y = NodeList[nearinds[i]].y;
-//                for (int j = 0; j < int(d/stepsize); ++j)
-//                {
-//                    tempNode_x += stepsize*cos(theta);
-//                    tempNode_y += stepsize*sin(theta);
-//                    if (costs[getIndex(tempNode_x, tempNode_y)])
-//                    {
-//                        dlist[i]=1e4;
-//                        break;
-//                    }
-//                }
-//            }
-//            // find the min cost
-//            float mincost = 1e4;
-//            int mindex = -1;
-//            for (int i = 0; i < nnearinds; ++i)
-//            {
-//                if (dlist[i]<mincost)
-//                {
-//                    mindex = i;
-//                    mincost = dlist[i];
-//                }
-//            }
-//            if (mincost < 1e4){
-//                newNode_cost = mincost;
-//                newNode_parent = nearinds[mindex];
-//            }
-//        }
-
-//        potential[getIndex(newNode_x, newNode_y)] = potential[getIndex(NodeList[nearestNode].x, NodeList[nearestNode].y)] + 1;
-//        NodeList.push_back(Node(newNode_x, newNode_y, newNode_parent));
-//        NodeList.back().cost = newNode_cost;
-//        // rewire
-//        for (int i = 0; i < nnearinds; ++i)
-//        {
-//            int dx = newNode_x - NodeList[nearinds[i]].x;
-//            int dy = newNode_y - NodeList[nearinds[i]].y;
-//            int d = sqrt(pow(dx,2)+pow(dy,2));
-//            int scost = newNode_cost+d;
-
-//            if (NodeList[nearinds[i]].cost>scost){
-//                int theta = atan2(dy,dx);
-//                // check collision
-//                int tempNode_x = NodeList[nearinds[i]].x;
-//                int tempNode_y = NodeList[nearinds[i]].y;
-//                int flag = 1;
-//                for (int j = 0; j < int(d/stepsize); ++j)
-//                {
-//                    tempNode_x+=stepsize*cos(theta);
-//                    tempNode_y+=stepsize*sin(theta);
-//                    if (costs[getIndex(tempNode_x, tempNode_y)])
-//                    {
-//                        flag = 0;
-//                        break;
-//                    }
-//                }
-//                if(flag){
-//                    NodeList[nearinds[i]].parent = int(NodeList.size())-1;
-//                    NodeList[nearinds[i]].cost = scost;
-//                }
-//            }
-//        }
-
-//        if (sqrt(pow(newNode_x-end_x,2)+pow(newNode_y-end_y,2)) < stepsize){
-//            // generate the final path
-//            std::pair<float, float> current;
-//            current.first = end_x;
-//            current.second = end_y;
-//            path.push_back(current);
-//            int currentNode = NodeList.size()-1;
-//            while (currentNode>=0) {
-//                // ROS_INFO("%d %lf",currentNode,NodeList[currentNode].cost);
-//                current.first = NodeList[currentNode].x;
-//                current.second = NodeList[currentNode].y;
-//                path.push_back(current);
-//                currentNode = NodeList[currentNode].parent;
-//            }
-//        }
-//        cycle++;
-//    }
+void RRTStar::rewire(Node newNode, double radius)
+{
+    // find near nodes
+    std::vector<Node> nearNodes;
+    nearNodes.clear();
+    for(int i=0; i<NodeList.size(); i++){
+        if(pow(NodeList[i].x - newNode.x, 2)+pow(NodeList[i].y - newNode.y, 2) < pow(radius, 2)){
+            nearNodes.push_back(NodeList[i]);
+        }
+    }
+    // rewire
+    for(int i=0; i<nearNodes.size(); i++){
+        double new_cost = newNode.cost + sqrt(pow(newNode.y - nearNodes[i].y, 2) + pow(newNode.x - nearNodes[i].x, 2));
+        if(new_cost < nearNodes[i].cost){
+            nearNodes[i].cost = new_cost;
+            nearNodes[i].parent = NodeList.size()-1;
+        }
+    }
 }
 
 int RRTStar::findNearestNode(int x, int y)
 {
-    float max_distance = 1e10;
+    double max_distance = 1e10;
     int nearest_index = -1;
     for(int i = 0; i < NodeList.size(); i++){
-        float distance = sqrt(pow(NodeList[i].x-x,2) + pow(NodeList[i].y-y,2));
+        double distance = sqrt(pow(NodeList[i].x-x,2) + pow(NodeList[i].y-y,2));
         if(distance < max_distance){
             max_distance = distance;
             nearest_index = i;
@@ -173,7 +134,32 @@ int RRTStar::findNearestNode(int x, int y)
     return nearest_index;
 }
 
+Node RRTStar::randomSample(double epsilon, int end_x, int end_y)
+{
+    int rand_x, rand_y;
+
+    if(QRandomGenerator::global()->generate()%100 >= epsilon*100){
+        rand_x = QRandomGenerator::global()->generate()%PARAMS::FIELD::LENGTH - PARAMS::FIELD::LENGTH/2;
+        rand_y = QRandomGenerator::global()->generate()%PARAMS::FIELD::WIDTH - PARAMS::FIELD::WIDTH/2;
+    }else{
+        rand_x = end_x;
+        rand_y = end_y;
+    }
+    return Node(rand_x, rand_y);
+}
+
+bool RRTStar::inNodeList(int x, int y)
+{
+    for(int i=0; i<NodeList.size(); i++){
+        if(NodeList[i].x == x && NodeList[i].y == y)
+            return true;
+    }
+    return false;
+}
+
 void RRTStar::pathSmooth()
 {
 
 }
+
+
