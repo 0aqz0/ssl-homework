@@ -14,6 +14,12 @@ namespace PARAMS {
     const int our_id = 0;
     const bool isBlue = true;
 
+    // field
+    namespace FIELD {
+        const int LENGTH = 1200;
+        const int WIDTH = 900;
+    }
+
     // serial sender
     const QString serialPort = "COM7";
     const int frequency = 0;
@@ -33,7 +39,9 @@ namespace PARAMS {
 
     // RRT
     namespace RRT {
-
+        const int ITERATIONS = 1e4;
+        const int STEP_SIZE = 10;
+        const double EPSILON = 0.05;
     }
 
     // math constant
