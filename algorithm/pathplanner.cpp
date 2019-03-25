@@ -40,6 +40,10 @@ void PathPlanner::rotateToPoint(MyPoint target)
     // 计算旋转速度的绝对值
     double rotVel = diffAngle * PARAMS::ROTATE_COFF; // need improve!!!
     // 计算旋转速度的方向
+    if (me_angle > targetAngle)
+        rotVel *= -1;
+    if (fabs(me_angle - targetAngle) > PARAMS::MATH::PI)
+        rotVel *= -1;
 
     if (fabs(diffAngle) >= PARAMS::ANGLE_THRESHOLD) {
         CommandSender::instance()->sendToSim(0,0,0,rotVel);
