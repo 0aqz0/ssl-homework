@@ -34,8 +34,10 @@ namespace PARAMS {
 
     // path planning
     const double ANGLE_THRESHOLD = 0.1;
-    const double FARWARD_ANGLE_THRESHOLD = 0.5;
-    const double ROTATE_COFF = 1.0;
+    const double FORWARD_ANGLE_THRESHOLD = 0.3;
+    const double ROTATE_COFF = 4.0;
+    const double FORWARD_SPEED = 3.0;
+    const double FORWARD_ROTATE_COFF = 3.0;
 
     // RRT
     namespace RRT {
