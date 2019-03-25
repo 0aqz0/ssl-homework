@@ -39,6 +39,10 @@ namespace PARAMS {
     const double FORWARD_SPEED = 3.0;
     const double FORWARD_ROTATE_COFF = 3.0;
 
+    //visualization module
+    const QHostAddress visualAddress = QHostAddress("127.0.0.1");
+    const int visualPort = 20001;
+
     // RRT
     namespace RRT {
         const int ITERATIONS = 1e4;

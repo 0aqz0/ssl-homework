@@ -7,11 +7,23 @@
 #include "algorithm/pathplanner.h"
 #include "algorithm/rrt.h"
 #include "algorithm/rrtstar.h"
+#include "utils/visualizationmodule.h"
 #include <thread>
 #include <iostream>
 
 void loop()
 {
+    std::vector<MyPoint> somepoints;
+    somepoints.push_back(MyPoint(100,400));
+    somepoints.push_back(MyPoint(400,100));
+    somepoints.push_back(MyPoint(-200,200));
+    while(true)//好像同一时刻能画出一种形态？就是不能保留下来
+    {
+        VisualModule::instance()->drawLines(somepoints);
+        VisualModule::instance()->drawPoints(somepoints);
+    }
+
+//    DebugMsgSender::instance()->drawLines(somepoints);
 //    RealCommandSender::instance()->openSerialPort();
 //    RealCommandSender::instance()->sendStartPacket();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
