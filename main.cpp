@@ -6,6 +6,7 @@
 #include "utils/mymath.h"
 #include "algorithm/pathplanner.h"
 #include "algorithm/rrt.h"
+#include "algorithm/rrtstar.h"
 #include <thread>
 #include <iostream>
 
@@ -14,7 +15,8 @@ void loop()
 //    RealCommandSender::instance()->openSerialPort();
 //    RealCommandSender::instance()->sendStartPacket();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x,MyDataManager::instance()->ourRobot().y, 300, 0);
+//    RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x,MyDataManager::instance()->ourRobot().y, 300, 0);
+    RRTStarPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x,MyDataManager::instance()->ourRobot().y, 300, 0);
     while(true){
 //        std::this_thread::sleep_for(std::chrono::milliseconds(10));
 //        qDebug() << "in the thread!";

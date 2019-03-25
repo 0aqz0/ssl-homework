@@ -44,6 +44,14 @@ namespace PARAMS {
         const double EPSILON = 0.05;
     }
 
+    // RRTStar
+    namespace RRTStar {
+        const int ITERATIONS = 1e4;
+        const int STEP_SIZE = 5;
+        const double EPSILON = 0.05;
+        const double GAMMA = 200.0;
+    }
+
     // math constant
     namespace MATH {
         const double PI = 3.14159265359;
