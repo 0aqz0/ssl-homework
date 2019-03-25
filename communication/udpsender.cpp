@@ -32,21 +32,4 @@ void UDPSender::sendToSim(int robot_id, double vel_x, double vel_y, double vel_w
     QByteArray data(size, 0);
     packet.SerializePartialToArray(data.data(), data.size());
     sender->writeDatagram(data, size, PARAMS::simAddress, PARAMS::simPort);
-
-//    ZSS::Protocol::Debug_Msgs msgs;
-//    ZSS::Protocol::Debug_Msg* msg = msgs.add_msgs();
-//    msg->set_type(ZSS::Protocol::Debug_Msg_Debug_Type_LINE);
-//    msg->set_color(ZSS::Protocol::Debug_Msg_Color_BLUE);
-//    ZSS::Protocol::Debug_Line* line = msg->mutable_line();
-//    line->mutable_start()->set_x(0);
-//    line->mutable_start()->set_y(0);
-//    line->mutable_end()->set_x(100);
-//    line->mutable_end()->set_y(100);
-//    line->set_forward(false);
-//    line->set_back(false);
-//    int msg_size = msgs.ByteSize();
-//    QByteArray msg_data(msg_size, 0);
-//    msgs.SerializeToArray(msg_data.data(), msg_data.size());
-//    sender->writeDatagram(msg_data, msg_size, QHostAddress("127.0.0.1"), 20001);
-
 }
