@@ -1,6 +1,5 @@
 #include "rrt.h"
 #include "utils/params.h"
-#include <random>
 #include <QRandomGenerator>
 
 void RRT::plan(double start_x, double start_y, double end_x, double end_y)
@@ -17,7 +16,7 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
         // Find the nearest node
         int nearestNode = findNearestNode(randNode.x, randNode.y);
         // expand the tree
-        float theta = atan2(randNode.y - NodeList[nearestNode].y, randNode.x - NodeList[nearestNode].x);
+        double theta = atan2(randNode.y - NodeList[nearestNode].y, randNode.x - NodeList[nearestNode].x);
         int newNode_x = NodeList[nearestNode].x + PARAMS::RRT::STEP_SIZE*cos(theta);
         int newNode_y = NodeList[nearestNode].y + PARAMS::RRT::STEP_SIZE*sin(theta);
 
