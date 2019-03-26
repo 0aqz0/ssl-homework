@@ -89,11 +89,54 @@ void visualizationmodule::drawLines(std::vector<MyPoint> &somePoints)
     int msgs_size = msgs.ByteSize();
     QByteArray msgs_data(msgs_size, 0);
     msgs.SerializeToArray(msgs_data.data(), msgs_data.size());
-//    sender->writeDatagram(msgs_data, msgs_size, PARAMS::visualAddress, PARAMS::visualPort);
-    sender->writeDatagram(msgs_data, msgs_size,  QHostAddress("127.0.0.1"), 20001);
+    sender->writeDatagram(msgs_data, msgs_size, PARAMS::visualAddress, PARAMS::visualPort);
+//    sender->writeDatagram(msgs_data, msgs_size,  QHostAddress("127.0.0.1"), 20001);
 }
 
 void visualizationmodule::drawTree(std::vector<Node> &someNodes)
 {
-    //
+    ZSS::Protocol::Debug_Msgs msgs;
+    ZSS::Protocol::Debug_Msg* msg;
+    ZSS::Protocol::Debug_Line* line;
+    for(unsigned i = 0; i < someNodes.size(); i++)
+    {
+        //画出点来
+        msg = msgs.add_msgs();
+        msg->set_type(ZSS::Protocol::Debug_Msg_Debug_Type_LINE);
+        msg->set_color(ZSS::Protocol::Debug_Msg_Color_RED);
+        line = msg->mutable_line();
+        line->mutable_start()->set_x(someNodes[i].x-5);
+        line->mutable_start()->set_y(someNodes[i].y-5);
+        line->mutable_end()->set_x(someNodes[i].x+5);
+        line->mutable_end()->set_y(someNodes[i].y+5);
+        line->set_forward(false);
+        line->set_back(false);
+        msg = msgs.add_msgs();
+        msg->set_type(ZSS::Protocol::Debug_Msg_Debug_Type_LINE);
+        msg->set_color(ZSS::Protocol::Debug_Msg_Color_RED);
+        line = msg->mutable_line();
+        line->mutable_start()->set_x(someNodes[i].x+5);
+        line->mutable_start()->set_y(someNodes[i].y-5);
+        line->mutable_end()->set_x(someNodes[i].x-5);
+        line->mutable_end()->set_y(someNodes[i].y+5);
+        line->set_forward(false);
+        line->set_back(false);
+        //画线
+        if(someNodes[i].parent == -1) continue;
+        msg = msgs.add_msgs();
+        msg->set_type(ZSS::Protocol::Debug_Msg_Debug_Type_LINE);
+        msg->set_color(ZSS::Protocol::Debug_Msg_Color_BLUE);
+        line = msg->mutable_line();
+        line->mutable_start()->set_x(someNodes[i].x);
+        line->mutable_start()->set_y(someNodes[i].y);
+        line->mutable_end()->set_x(someNodes[someNodes[i].parent].x);
+        line->mutable_end()->set_y(someNodes[someNodes[i].parent].y);
+        line->set_forward(false);
+        line->set_back(false);
+    }
+    int msgs_size = msgs.ByteSize();
+    QByteArray msgs_data(msgs_size, 0);
+    msgs.SerializeToArray(msgs_data.data(), msgs_data.size());
+    sender->writeDatagram(msgs_data, msgs_size, PARAMS::visualAddress, PARAMS::visualPort);
+//    sender->writeDatagram(msgs_data, msgs_size,  QHostAddress("127.0.0.1"), 20001);
 }
