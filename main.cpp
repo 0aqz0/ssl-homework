@@ -7,6 +7,7 @@
 #include "algorithm/pathplanner.h"
 #include "algorithm/rrt.h"
 #include "algorithm/rrtstar.h"
+#include "algorithm/artifical_potential.h"
 #include "utils/visualizationmodule.h"
 #include <thread>
 #include <iostream>
@@ -25,14 +26,16 @@ void pathPlanning()
 //    DebugMsgSender::instance()->drawLines(somepoints);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
-    LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
+//    RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
+//    LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
+    ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
     while(true){
         std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 //        RRTStarPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x,MyDataManager::instance()->ourRobot().y, 500, 0);
 //        LocalPlanner::instance()->updatePath(RRTStarPlanner::instance()->smoothPath);
-        RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
-        LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
+//        RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
+//        LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
+        ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
         qDebug() << "path planning!!!";
     }
 }
@@ -73,7 +76,7 @@ int main(int argc, char *argv[])
 
 //    MyVector b(3, 4);
 //    MyVector c(3, 4);
-//    std::cout << (b + c).x() << ", " << (b + c).y()
+//    std::cout << b.mod()
 //              << std::endl;
 
     return a.exec();

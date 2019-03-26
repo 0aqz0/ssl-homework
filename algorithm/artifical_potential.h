@@ -6,7 +6,8 @@
 
 class ArtificalPotential{
 public:
-    void plan( MyPoint target, MyVector v_target );
+//    void plan( MyPoint target, MyVector v_target );
+    void plan( MyPoint target );
 };
 
 typedef Singleton<ArtificalPotential> ApPlanner;

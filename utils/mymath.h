@@ -9,6 +9,8 @@ public:
     MyVector( float x, float y ): _x(x), _y(y){}
     float x ( void ) const { return _x; }
     float y ( void ) const { return _y; }
+    void Setx ( float x ) { _x = x; }
+    void Sety ( float y ) { _y = y; }
     float mod() { return sqrt( _x * _x + _y * _y ); }
     MyVector operator*( const float a ) const;
     MyVector operator-( const MyVector& v ) const;

@@ -1,4 +1,5 @@
 #include "mymath.h"
+#include <iostream>
 
 MyVector MyPoint::operator -( const MyPoint& p ) const{
     float vec_x = _x - p.x();
