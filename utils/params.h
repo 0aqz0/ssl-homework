@@ -55,7 +55,7 @@ namespace PARAMS {
         const int ITERATIONS = 1e4;
         const int STEP_SIZE = 2;
         const double EPSILON = 0.1;
-        const double GAMMA = 300.0;
+        const double GAMMA = 30.0;
     }
 
     // math constant

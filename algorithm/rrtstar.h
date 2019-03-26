@@ -10,6 +10,7 @@ public:
     RRTStar(){}
     void plan(double start_x, double start_y, double end_x, double end_y);
     std::vector<MyPoint> finalPath;
+    std::vector<MyPoint> smoothPath;
 private:
     int chooseBestParent(int x, int y, double radius, double old_cost);
     int findNearestNode(int x, int y);

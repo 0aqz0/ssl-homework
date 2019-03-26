@@ -27,18 +27,18 @@ void loop()
 //    RealCommandSender::instance()->openSerialPort();
 //    RealCommandSender::instance()->sendStartPacket();
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x,MyDataManager::instance()->ourRobot().y, 500, 0);
-    LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
-//    RRTStarPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x,MyDataManager::instance()->ourRobot().y, 300, 0);
-//    LocalPlanner::instance()->updatePath(RRTStarPlanner::instance()->finalPath);
+//    RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x,MyDataManager::instance()->ourRobot().y, 500, 0);
+//    LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
+    RRTStarPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x,MyDataManager::instance()->ourRobot().y, 500, 0);
+    LocalPlanner::instance()->updatePath(RRTStarPlanner::instance()->smoothPath);
     while(true){
 //        std::this_thread::sleep_for(std::chrono::milliseconds(10));
 //        qDebug() << "in the thread!";
 //        RealCommandSender::instance()->sendToReal(0, 100, 0, 0);
         LocalPlanner::instance()->plan();
-//        VisualModule::instance()->drawLines(RRTStarPlanner::instance()->finalPath);
+        VisualModule::instance()->drawLines(RRTStarPlanner::instance()->smoothPath);
 //        VisualModule::instance()->drawLines(RRTPlanner::instance()->finalPath);
-        VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
+//        VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
     }
 }
 

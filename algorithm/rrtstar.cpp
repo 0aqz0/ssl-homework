@@ -9,9 +9,7 @@ void RRTStar::plan(double start_x, double start_y, double end_x, double end_y)
     NodeList.clear();
     NodeList.push_back(Node(start_x, start_y));
 
-    int iter = 0;
-
-    while (iter < PARAMS::RRTStar::ITERATIONS) {
+    for(int iter=0; iter<PARAMS::RRTStar::ITERATIONS; iter++) {
         // random sampling
         Node randNode = randomSample(PARAMS::RRTStar::EPSILON, end_x, end_y);
         // Find the nearest node
@@ -48,7 +46,6 @@ void RRTStar::plan(double start_x, double start_y, double end_x, double end_y)
 
         if (sqrt(pow(newNode_x-end_x, 2) + pow(newNode_y-end_y, 2)) < PARAMS::RRTStar::STEP_SIZE)
             break;
-        iter++;
     }
     // generate the final path
     std::vector<MyPoint> tempPath;
@@ -66,9 +63,9 @@ void RRTStar::plan(double start_x, double start_y, double end_x, double end_y)
         tempPath.pop_back();
     }
     pathSmooth();
-    for(int i=0; i<finalPath.size();i++){
-        qDebug() << finalPath[i].x() << finalPath[i].y();
-    }
+//    for(int i=0; i<finalPath.size();i++){
+//        qDebug() << finalPath[i].x() << finalPath[i].y();
+//    }
 }
 
 int RRTStar::chooseBestParent(int x, int y, double radius, double old_cost)
@@ -91,8 +88,8 @@ int RRTStar::chooseBestParent(int x, int y, double radius, double old_cost)
         {
             double new_cost = nearNodes[i].cost + sqrt(pow(nearNodes[i].y - y, 2) + pow(nearNodes[i].x - x, 2));
             // check collision
-            // TODO
-            // if collision, continue
+            if(ObstaclesInfo::instance()->hasObstacle(nearNodes[i].x, nearNodes[i].y, x, y, CIRCLE))
+                continue;
 
             if(new_cost < old_cost){
                 bestParent = nearNodesIndex[i];
@@ -116,6 +113,9 @@ void RRTStar::rewire(Node newNode, double radius)
     // rewire
     for(int i=0; i<nearNodes.size(); i++){
         double new_cost = newNode.cost + sqrt(pow(newNode.y - nearNodes[i].y, 2) + pow(newNode.x - nearNodes[i].x, 2));
+        // check collision
+//        if(ObstaclesInfo::instance()->hasObstacle(nearNodes[i].x, nearNodes[i].y, newNode.x, newNode.y, CIRCLE))
+//            continue;
         if(new_cost < nearNodes[i].cost){
             nearNodes[i].cost = new_cost;
             nearNodes[i].parent = NodeList.size()-1;
@@ -162,7 +162,6 @@ bool RRTStar::inNodeList(int x, int y)
 
 void RRTStar::pathSmooth()
 {
-    std::vector<MyPoint> smoothPath;
     smoothPath.clear();
     smoothPath.push_back(finalPath[0]);
     int nextPoint = 1;
@@ -172,8 +171,6 @@ void RRTStar::pathSmooth()
         smoothPath.push_back(finalPath[nextPoint]);
         nextPoint++;
     }
-    finalPath.clear();
-    finalPath = smoothPath;
 }
 
 
