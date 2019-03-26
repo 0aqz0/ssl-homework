@@ -66,6 +66,8 @@ namespace PARAMS {
     // obstacle module
     namespace OBSTACLE {
         const double INFLATION_RADIUS = 30.0;
+        const double INFLATION_RADIUS_SQUARE = 900.0;
+        const double STEP_SIZE = 10;
     }
 }
 

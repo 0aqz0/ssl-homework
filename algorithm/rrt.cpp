@@ -9,9 +9,7 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
     NodeList.clear();
     NodeList.push_back(Node(start_x, start_y));
 
-    int iter = 0;
-
-    while (iter < PARAMS::RRT::ITERATIONS) {
+    for(int iter=0; iter<PARAMS::RRT::ITERATIONS; iter++) {
         // random sampling
         Node randNode = randomSample(PARAMS::RRT::EPSILON, end_x, end_y);
         // Find the nearest node
@@ -30,12 +28,9 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
         // obstacles
         if (ObstaclesInfo::instance()->hasObstacle(newNode_x, newNode_y, CIRCLE))
             continue;
-
         NodeList.push_back(Node(newNode_x, newNode_y, nearestNode));
         if (sqrt(pow(newNode_x-end_x,2)+pow(newNode_y-end_y,2)) < PARAMS::RRT::STEP_SIZE)
             break;
-
-        iter++;
     }
     // generate the final path
     std::vector<MyPoint> tempPath;
@@ -53,9 +48,9 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
         tempPath.pop_back();
     }
     pathSmooth();
-    for(int i=0; i<finalPath.size();i++){
-        qDebug() << finalPath[i].x() << finalPath[i].y();
-    }
+//    for(int i=0; i<finalPath.size();i++){
+//        qDebug() << finalPath[i].x() << finalPath[i].y();
+//    }
 }
 
 int RRT::findNearestNode(int x, int y)
@@ -97,7 +92,6 @@ bool RRT::inNodeList(int x, int y)
 
 void RRT::pathSmooth()
 {
-    std::vector<MyPoint> smoothPath;
     smoothPath.clear();
     smoothPath.push_back(finalPath[0]);
     int nextPoint = 1;
@@ -107,6 +101,4 @@ void RRT::pathSmooth()
         smoothPath.push_back(finalPath[nextPoint]);
         nextPoint++;
     }
-    finalPath.clear();
-    finalPath = smoothPath;
 }
