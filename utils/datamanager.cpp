@@ -20,3 +20,8 @@ RobotInfo& DataManager::ourRobot()
     else
         return yellowRobots[PARAMS::our_id];
 }
+
+void DataManager::setGoals(std::deque<MyPoint> new_goals)
+{
+    goals = new_goals;
+}

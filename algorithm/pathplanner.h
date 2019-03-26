@@ -23,6 +23,7 @@ public:
     void stopMoving();
     void updatePath(std::vector<Node> &nodePath);
     void updatePath(std::vector<MyPoint> &pointPath);
+    void clearPath();
 private:
     std::deque<MyPoint> path;
 };

@@ -2,6 +2,8 @@
 #define DATAMANAGER_H
 #include "utils/singleton.hpp"
 #include "utils/params.h"
+#include "utils/mymath.h"
+#include <deque>
 
 struct BallInfo
 {
@@ -35,7 +37,9 @@ public:
     RobotInfo yellowRobots[PARAMS::ROBOT_NUM];
     bool validBlueRobots[PARAMS::ROBOT_NUM];
     bool validYellowRobots[PARAMS::ROBOT_NUM];
+    std::deque<MyPoint> goals;
     RobotInfo& ourRobot();
+    void setGoals(std::deque<MyPoint> new_goals);
     void reset();
 };
 typedef Singleton<DataManager> MyDataManager;
