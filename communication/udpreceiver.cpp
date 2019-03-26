@@ -74,8 +74,8 @@ void UDPReceiver::readDatagrams(){
             int robot_id = vision.robots_yellow(i).robot_id();          // need improve!!!
             MyDataManager::instance()->validYellowRobots[robot_id] = true;
             MyDataManager::instance()->yellowRobots[robot_id].robot_id = robot_id;
-            MyDataManager::instance()->yellowRobots[robot_id].x = vision.robots_yellow(i).x();
-            MyDataManager::instance()->yellowRobots[robot_id].y = vision.robots_yellow(i).y();
+            MyDataManager::instance()->yellowRobots[robot_id].x = vision.robots_yellow(i).x()/10;
+            MyDataManager::instance()->yellowRobots[robot_id].y = -vision.robots_yellow(i).y()/10;
             if (vision.robots_yellow(i).has_orientation())
                 MyDataManager::instance()->yellowRobots[robot_id].orientation = vision.robots_yellow(i).orientation();
             else
@@ -93,7 +93,6 @@ void UDPReceiver::readDatagrams(){
             else
                 MyDataManager::instance()->yellowRobots[robot_id].rotate_vel = 9999;
         }
-
         // debug
 //        for(int i=0; i<16; i++){
 //            qDebug() << "robot_id: " << i << "  " << MyDataManager::instance()->validBlueRobots[i];
