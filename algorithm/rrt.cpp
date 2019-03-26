@@ -28,10 +28,8 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
         if (inNodeList(newNode_x, newNode_y))
             continue;
         // obstacles
-        if (ObstaclesInfo::instance()->hasObstacle(newNode_x, newNode_y, CIRCLE)){
-//            qDebug() << "has obstacles";
+        if (ObstaclesInfo::instance()->hasObstacle(newNode_x, newNode_y, CIRCLE))
             continue;
-        }
 
         NodeList.push_back(Node(newNode_x, newNode_y, nearestNode));
         if (sqrt(pow(newNode_x-end_x,2)+pow(newNode_y-end_y,2)) < PARAMS::RRT::STEP_SIZE)
@@ -54,6 +52,7 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
         finalPath.push_back(tempPath.back());
         tempPath.pop_back();
     }
+    pathSmooth();
     for(int i=0; i<finalPath.size();i++){
         qDebug() << finalPath[i].x() << finalPath[i].y();
     }
@@ -98,5 +97,16 @@ bool RRT::inNodeList(int x, int y)
 
 void RRT::pathSmooth()
 {
-
+    std::vector<MyPoint> smoothPath;
+    smoothPath.clear();
+    smoothPath.push_back(finalPath[0]);
+    int nextPoint = 1;
+    while(nextPoint < finalPath.size()){
+        while(!ObstaclesInfo::instance()->hasObstacle(smoothPath.back().x(), smoothPath.back().y(), finalPath[nextPoint+1].x(), finalPath[nextPoint+1].y(), CIRCLE) && nextPoint < finalPath.size()-1)
+            nextPoint++;
+        smoothPath.push_back(finalPath[nextPoint]);
+        nextPoint++;
+    }
+    finalPath.clear();
+    finalPath = smoothPath;
 }

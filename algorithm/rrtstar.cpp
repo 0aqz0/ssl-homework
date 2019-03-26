@@ -1,6 +1,7 @@
 #include "rrtstar.h"
 #include "utils/params.h"
 #include <QRandomGenerator>
+#include "algorithm/obstacles.h"
 
 void RRTStar::plan(double start_x, double start_y, double end_x, double end_y)
 {
@@ -29,7 +30,8 @@ void RRTStar::plan(double start_x, double start_y, double end_x, double end_y)
         if (inNodeList(newNode_x, newNode_y))
             continue;
         // obstacles
-        // TODO
+        if (ObstaclesInfo::instance()->hasObstacle(newNode_x, newNode_y, CIRCLE))
+            continue;
 
         // choose best parent
         double radius = PARAMS::RRTStar::GAMMA*sqrt(log(NodeList.size())/NodeList.size());
@@ -63,6 +65,7 @@ void RRTStar::plan(double start_x, double start_y, double end_x, double end_y)
         finalPath.push_back(tempPath.back());
         tempPath.pop_back();
     }
+    pathSmooth();
     for(int i=0; i<finalPath.size();i++){
         qDebug() << finalPath[i].x() << finalPath[i].y();
     }
@@ -159,7 +162,18 @@ bool RRTStar::inNodeList(int x, int y)
 
 void RRTStar::pathSmooth()
 {
-
+    std::vector<MyPoint> smoothPath;
+    smoothPath.clear();
+    smoothPath.push_back(finalPath[0]);
+    int nextPoint = 1;
+    while(nextPoint < finalPath.size()){
+        while(!ObstaclesInfo::instance()->hasObstacle(smoothPath.back().x(), smoothPath.back().y(), finalPath[nextPoint+1].x(), finalPath[nextPoint+1].y(), CIRCLE) && nextPoint < finalPath.size()-1)
+            nextPoint++;
+        smoothPath.push_back(finalPath[nextPoint]);
+        nextPoint++;
+    }
+    finalPath.clear();
+    finalPath = smoothPath;
 }
 
 
