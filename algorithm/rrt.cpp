@@ -1,6 +1,7 @@
 #include "rrt.h"
 #include "utils/params.h"
 #include <QRandomGenerator>
+#include "algorithm/obstacles.h"
 
 void RRT::plan(double start_x, double start_y, double end_x, double end_y)
 {
@@ -8,9 +9,7 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
     NodeList.clear();
     NodeList.push_back(Node(start_x, start_y));
 
-    int iter = 0;
-
-    while (iter < PARAMS::RRT::ITERATIONS) {
+    for(int iter=0; iter<PARAMS::RRT::ITERATIONS; iter++) {
         // random sampling
         Node randNode = randomSample(PARAMS::RRT::EPSILON, end_x, end_y);
         // Find the nearest node
@@ -27,13 +26,11 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
         if (inNodeList(newNode_x, newNode_y))
             continue;
         // obstacles
-        // TODO
-
+        if (ObstaclesInfo::instance()->hasObstacle(newNode_x, newNode_y, CIRCLE))
+            continue;
         NodeList.push_back(Node(newNode_x, newNode_y, nearestNode));
         if (sqrt(pow(newNode_x-end_x,2)+pow(newNode_y-end_y,2)) < PARAMS::RRT::STEP_SIZE)
             break;
-
-        iter++;
     }
     // generate the final path
     std::vector<MyPoint> tempPath;
@@ -50,6 +47,7 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
         finalPath.push_back(tempPath.back());
         tempPath.pop_back();
     }
+    pathSmooth();
 //    for(int i=0; i<finalPath.size();i++){
 //        qDebug() << finalPath[i].x() << finalPath[i].y();
 //    }
@@ -94,5 +92,13 @@ bool RRT::inNodeList(int x, int y)
 
 void RRT::pathSmooth()
 {
-
+    smoothPath.clear();
+    smoothPath.push_back(finalPath[0]);
+    int nextPoint = 1;
+    while(nextPoint < finalPath.size()){
+        while(!ObstaclesInfo::instance()->hasObstacle(smoothPath.back().x(), smoothPath.back().y(), finalPath[nextPoint+1].x(), finalPath[nextPoint+1].y(), CIRCLE) && nextPoint < finalPath.size()-1)
+            nextPoint++;
+        smoothPath.push_back(finalPath[nextPoint]);
+        nextPoint++;
+    }
 }

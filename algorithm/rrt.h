@@ -10,6 +10,7 @@ public:
     RRT(){}
     void plan(double start_x, double start_y, double end_x, double end_y);
     std::vector<MyPoint> finalPath;
+    std::vector<MyPoint> smoothPath;
 private:
     int findNearestNode(int x, int y);
     void pathSmooth();

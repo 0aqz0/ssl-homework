@@ -3,25 +3,18 @@
 
 PathPlanner::PathPlanner()
 {
-    // test
-    path.push_back(MyPoint(300, 0));
-    path.push_back(MyPoint(-300, 0));
+
 }
 
 void PathPlanner::plan()
 {
     if (path.size() > 0){
-        MyPoint current_target = path.front();
-        while (hasArrived(current_target))
+        while (hasArrived(path.front()))
         {
             qDebug() << "has arrived";
-            stopMoving();
-            path.push_back(path.front());
             path.pop_front();
-            current_target = path.front();
         }
-//        rotateToPoint(current_target);
-        goToPoint(current_target);
+        goToPoint(path.front());
     }
 }
 
@@ -97,4 +90,9 @@ void PathPlanner::updatePath(std::vector<MyPoint> &pointPath)
     for(int i=0; i<pointPath.size(); i++){
         path.push_back(pointPath[i]);
     }
+}
+
+void PathPlanner::clearPath()
+{
+    path.clear();
 }
