@@ -1,6 +1,7 @@
 #include "rrt.h"
 #include "utils/params.h"
 #include <QRandomGenerator>
+#include "algorithm/obstacles.h"
 
 void RRT::plan(double start_x, double start_y, double end_x, double end_y)
 {
@@ -27,7 +28,10 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
         if (inNodeList(newNode_x, newNode_y))
             continue;
         // obstacles
-        // TODO
+        if (ObstaclesInfo::instance()->hasObstacle(newNode_x, newNode_y, CIRCLE)){
+//            qDebug() << "has obstacles";
+            continue;
+        }
 
         NodeList.push_back(Node(newNode_x, newNode_y, nearestNode));
         if (sqrt(pow(newNode_x-end_x,2)+pow(newNode_y-end_y,2)) < PARAMS::RRT::STEP_SIZE)
@@ -50,9 +54,9 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
         finalPath.push_back(tempPath.back());
         tempPath.pop_back();
     }
-//    for(int i=0; i<finalPath.size();i++){
-//        qDebug() << finalPath[i].x() << finalPath[i].y();
-//    }
+    for(int i=0; i<finalPath.size();i++){
+        qDebug() << finalPath[i].x() << finalPath[i].y();
+    }
 }
 
 int RRT::findNearestNode(int x, int y)

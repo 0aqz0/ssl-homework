@@ -47,7 +47,7 @@ namespace PARAMS {
     namespace RRT {
         const int ITERATIONS = 1e4;
         const int STEP_SIZE = 10;
-        const double EPSILON = 0.05;
+        const double EPSILON = 0.1;
     }
 
     // RRTStar
@@ -61,6 +61,11 @@ namespace PARAMS {
     // math constant
     namespace MATH {
         const double PI = 3.14159265359;
+    }
+
+    // obstacle module
+    namespace OBSTACLE {
+        const double INFLATION_RADIUS = 30.0;
     }
 }
 

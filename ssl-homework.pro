@@ -30,7 +30,8 @@ SOURCES += main.cpp \
     utils/mymath.cpp \
     algorithm/rrtstar.cpp \
     algorithm/rrt.cpp \
-    utils/visualizationmodule.cpp
+    utils/visualizationmodule.cpp \
+    algorithm/obstacles.cpp
 
 HEADERS += \
     communication\udpreceiver.h \
@@ -49,7 +50,8 @@ HEADERS += \
     utils/params.h \
     algorithm/rrtstar.h \
     algorithm/rrt.h \
-    utils/visualizationmodule.h
+    utils/visualizationmodule.h \
+    algorithm/obstacles.h
 
 INCLUDEPATH += \
     ..\protobuf\include
