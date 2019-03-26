@@ -62,6 +62,9 @@ namespace PARAMS {
     namespace MATH {
         const double PI = 3.14159265359;
     }
+
+    // FPS
+    const int FRAME = 65;
 }
 
 #endif // PARAMS_H

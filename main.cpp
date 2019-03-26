@@ -46,11 +46,10 @@ int main(int argc, char *argv[])
 
     std::thread* _thread = new std::thread([ = ] {loop();});
 
-    MyPoint p1(4, 6);
-    MyPoint p2(2, 3);
-    MyVector v1 = p2 - p1;
-    std::cout << "[main.cpp] v1: " << v1.x() << ", "
-              << v1.y() << std::endl;
+//    MyVector b(3, 4);
+//    MyVector c(3, 4);
+//    std::cout << (b + c).x() << ", " << (b + c).y()
+//              << std::endl;
 
     return a.exec();
 }

@@ -1,15 +1,22 @@
 #ifndef MYMATH_H
 #define MYMATH_H
 
+#include <cmath>
+
 class MyVector{
 public:
     MyVector(): _x(0), _y(0){}
     MyVector( float x, float y ): _x(x), _y(y){}
     float x ( void ) const { return _x; }
     float y ( void ) const { return _y; }
-    MyVector operator*(const float a) const;
-    double operator*(const MyVector& v) const;
-    void operator=(const MyVector& v);
+    float mod() { return sqrt( _x * _x + _y * _y ); }
+    MyVector operator*( const float a ) const;
+    MyVector operator-( const MyVector& v ) const;
+    MyVector operator+( const MyVector& v ) const;
+    MyVector operator/( const float a ) const;
+    float operator*( const MyVector& v ) const;
+    void operator=( const MyVector& v );
+    MyVector Unitization();
 private:
     float _x;
     float _y;
