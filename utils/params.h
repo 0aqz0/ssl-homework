@@ -36,7 +36,7 @@ namespace PARAMS {
     const double ANGLE_THRESHOLD = 0.1;
     const double FORWARD_ANGLE_THRESHOLD = 0.3;
     const double ROTATE_COFF = 4.0;
-    const double FORWARD_SPEED = 3.0;
+    const double FORWARD_SPEED = 1.0;
     const double FORWARD_ROTATE_COFF = 3.0;
 
     //visualization module
@@ -53,9 +53,9 @@ namespace PARAMS {
     // RRTStar
     namespace RRTStar {
         const int ITERATIONS = 1e4;
-        const int STEP_SIZE = 5;
-        const double EPSILON = 0.05;
-        const double GAMMA = 200.0;
+        const int STEP_SIZE = 2;
+        const double EPSILON = 0.1;
+        const double GAMMA = 300.0;
     }
 
     // math constant

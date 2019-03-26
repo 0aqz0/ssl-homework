@@ -17,11 +17,11 @@ void loop()
     somepoints.push_back(MyPoint(100,400));
     somepoints.push_back(MyPoint(400,100));
     somepoints.push_back(MyPoint(-200,200));
-    while(true)//好像同一时刻能画出一种形态？就是不能保留下来
-    {
-        VisualModule::instance()->drawLines(somepoints);
-        VisualModule::instance()->drawPoints(somepoints);
-    }
+//    while(true)//好像同一时刻能画出一种形态？就是不能保留下来
+//    {
+//        VisualModule::instance()->drawLines(somepoints);
+//        VisualModule::instance()->drawPoints(somepoints);
+//    }
 
 //    DebugMsgSender::instance()->drawLines(somepoints);
 //    RealCommandSender::instance()->openSerialPort();
@@ -35,6 +35,7 @@ void loop()
 //        qDebug() << "in the thread!";
 //        RealCommandSender::instance()->sendToReal(0, 100, 0, 0);
         LocalPlanner::instance()->plan();
+        VisualModule::instance()->drawLines(RRTStarPlanner::instance()->finalPath);
     }
 }
 

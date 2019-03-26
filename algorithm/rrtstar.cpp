@@ -19,7 +19,7 @@ void RRTStar::plan(double start_x, double start_y, double end_x, double end_y)
         double theta = atan2(randNode.y - NodeList[nearestNode].y, randNode.x - NodeList[nearestNode].x);
         int newNode_x = NodeList[nearestNode].x + PARAMS::RRTStar::STEP_SIZE*cos(theta);
         int newNode_y = NodeList[nearestNode].y + PARAMS::RRTStar::STEP_SIZE*sin(theta);
-        double newNode_cost = NodeList[nearestNode].cost + PARAMS::RRTStar::STEP_SIZE;
+        double newNode_cost = NodeList[nearestNode].cost + sqrt(pow(newNode_x - NodeList[nearestNode].x, 2) + pow(newNode_y - NodeList[nearestNode].y, 2));
         int newNode_parent = nearestNode;
 
         // outside the map
