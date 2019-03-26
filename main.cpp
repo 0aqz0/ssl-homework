@@ -14,6 +14,18 @@
 
 void pathPlanning()
 {
+    //使用的话，就直接把someNodes给放进去就好，可视化应该还行（画了点和线）
+   while(true)
+   {
+       std::vector<Node> someNodes;
+       someNodes.push_back(Node(99,99));
+       someNodes.push_back(Node(-99,99,0));
+       someNodes.push_back(Node(-99,-99,0));
+       someNodes.push_back(Node(400,400,1));
+       someNodes.push_back(Node(-400,-400,2));
+       VisualModule::instance()->drawTree(someNodes);
+   }
+
 //    std::vector<MyPoint> somepoints;
 //    somepoints.push_back(MyPoint(100,400));
 //    somepoints.push_back(MyPoint(400,100));
@@ -42,19 +54,19 @@ void pathPlanning()
 
 void velSending()
 {
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    while(true){
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        if(LocalPlanner::instance()->hasArrived(MyDataManager::instance()->goals.front())){
-            MyDataManager::instance()->goals.push_back(MyDataManager::instance()->goals.front());
-            MyDataManager::instance()->goals.pop_front();
-            LocalPlanner::instance()->stopMoving();
-            LocalPlanner::instance()->clearPath();
-            qDebug() << "Change Goal to " << MyDataManager::instance()->goals.front().x() << MyDataManager::instance()->goals.front().y();
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        while(true){
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            if(LocalPlanner::instance()->hasArrived(MyDataManager::instance()->goals.front())){
+                MyDataManager::instance()->goals.push_back(MyDataManager::instance()->goals.front());
+                MyDataManager::instance()->goals.pop_front();
+                LocalPlanner::instance()->stopMoving();
+                LocalPlanner::instance()->clearPath();
+                qDebug() << "Change Goal to " << MyDataManager::instance()->goals.front().x() << MyDataManager::instance()->goals.front().y();
+            }
+            LocalPlanner::instance()->plan();
+            VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
         }
-        LocalPlanner::instance()->plan();
-        VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
-    }
 }
 
 
