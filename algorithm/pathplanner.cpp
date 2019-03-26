@@ -3,9 +3,7 @@
 
 PathPlanner::PathPlanner()
 {
-    // test
-    path.push_back(MyPoint(300, 0));
-    path.push_back(MyPoint(-300, 0));
+
 }
 
 void PathPlanner::plan()

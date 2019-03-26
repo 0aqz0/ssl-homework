@@ -11,34 +11,38 @@
 #include <thread>
 #include <iostream>
 
-void loop()
+void pathPlanning()
 {
-    std::vector<MyPoint> somepoints;
-    somepoints.push_back(MyPoint(100,400));
-    somepoints.push_back(MyPoint(400,100));
-    somepoints.push_back(MyPoint(-200,200));
+//    std::vector<MyPoint> somepoints;
+//    somepoints.push_back(MyPoint(100,400));
+//    somepoints.push_back(MyPoint(400,100));
+//    somepoints.push_back(MyPoint(-200,200));
 //    while(true)//好像同一时刻能画出一种形态？就是不能保留下来
 //    {
 //        VisualModule::instance()->drawLines(somepoints);
 //        VisualModule::instance()->drawPoints(somepoints);
 //    }
-
 //    DebugMsgSender::instance()->drawLines(somepoints);
-//    RealCommandSender::instance()->openSerialPort();
-//    RealCommandSender::instance()->sendStartPacket();
+
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-//    RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x,MyDataManager::instance()->ourRobot().y, 500, 0);
-//    LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
-    RRTStarPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x,MyDataManager::instance()->ourRobot().y, 500, 0);
-    LocalPlanner::instance()->updatePath(RRTStarPlanner::instance()->smoothPath);
+    RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, 500, 0);
+    LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
     while(true){
-//        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-//        qDebug() << "in the thread!";
-//        RealCommandSender::instance()->sendToReal(0, 100, 0, 0);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+//        RRTStarPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x,MyDataManager::instance()->ourRobot().y, 500, 0);
+//        LocalPlanner::instance()->updatePath(RRTStarPlanner::instance()->smoothPath);
+        RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, 500, 0);
+        LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
+    }
+}
+
+void velSending()
+{
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    while(true){
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         LocalPlanner::instance()->plan();
-        VisualModule::instance()->drawLines(RRTStarPlanner::instance()->smoothPath);
-//        VisualModule::instance()->drawLines(RRTPlanner::instance()->finalPath);
-//        VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
+        VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
     }
 }
 
@@ -48,7 +52,13 @@ int main(int argc, char *argv[])
     QCoreApplication a(argc, argv);
     VisionReceiver::instance();
 
-    std::thread* _thread = new std::thread([ = ] {loop();});
+    if(!PARAMS::IS_SIMULATION){
+        RealCommandSender::instance()->openSerialPort();
+        RealCommandSender::instance()->sendStartPacket();
+    }
+
+    std::thread* _thread1 = new std::thread([ = ] {pathPlanning();});
+    std::thread* _thread2 = new std::thread([ = ] {velSending();});
 
     MyPoint p1(4, 6);
     MyPoint p2(2, 3);
