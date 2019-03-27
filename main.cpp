@@ -14,59 +14,37 @@
 
 void pathPlanning()
 {
-    //使用的话，就直接把someNodes给放进去就好，可视化应该还行（画了点和线）
-   while(true)
-   {
-       std::vector<Node> someNodes;
-       someNodes.push_back(Node(99,99));
-       someNodes.push_back(Node(-99,99,0));
-       someNodes.push_back(Node(-99,-99,0));
-       someNodes.push_back(Node(400,400,1));
-       someNodes.push_back(Node(-400,-400,2));
-       VisualModule::instance()->drawTree(someNodes);
-   }
-
-//    std::vector<MyPoint> somepoints;
-//    somepoints.push_back(MyPoint(100,400));
-//    somepoints.push_back(MyPoint(400,100));
-//    somepoints.push_back(MyPoint(-200,200));
-//    while(true)//好像同一时刻能画出一种形态？就是不能保留下来
-//    {
-//        VisualModule::instance()->drawLines(somepoints);
-//        VisualModule::instance()->drawPoints(somepoints);
-//    }
-//    DebugMsgSender::instance()->drawLines(somepoints);
-
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-//    RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
-//    LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
-    ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
+    RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
+    LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
+//    ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
     while(true){
         std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 //        RRTStarPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x,MyDataManager::instance()->ourRobot().y, 500, 0);
 //        LocalPlanner::instance()->updatePath(RRTStarPlanner::instance()->smoothPath);
-//        RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
-//        LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
-        ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
+        RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
+        LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
+//        ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
         qDebug() << "path planning!!!";
     }
 }
 
 void velSending()
 {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        while(true){
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-            if(LocalPlanner::instance()->hasArrived(MyDataManager::instance()->goals.front())){
-                MyDataManager::instance()->goals.push_back(MyDataManager::instance()->goals.front());
-                MyDataManager::instance()->goals.pop_front();
-                LocalPlanner::instance()->stopMoving();
-                LocalPlanner::instance()->clearPath();
-                qDebug() << "Change Goal to " << MyDataManager::instance()->goals.front().x() << MyDataManager::instance()->goals.front().y();
-            }
-            LocalPlanner::instance()->plan();
-            VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    while(true){
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        if(LocalPlanner::instance()->hasArrived(MyDataManager::instance()->goals.front())){
+            MyDataManager::instance()->goals.push_back(MyDataManager::instance()->goals.front());
+            MyDataManager::instance()->goals.pop_front();
+            LocalPlanner::instance()->stopMoving();
+            LocalPlanner::instance()->clearPath();
+            qDebug() << "Change Goal to " << MyDataManager::instance()->goals.front().x() << MyDataManager::instance()->goals.front().y();
         }
+        LocalPlanner::instance()->plan();
+//        VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
+        VisualModule::instance()->drawTree(RRTPlanner::instance()->NodeList);
+    }
 }
 
 
@@ -85,11 +63,6 @@ int main(int argc, char *argv[])
 
     std::thread* _thread1 = new std::thread([ = ] {pathPlanning();});
     std::thread* _thread2 = new std::thread([ = ] {velSending();});
-
-//    MyVector b(3, 4);
-//    MyVector c(3, 4);
-//    std::cout << b.mod()
-//              << std::endl;
 
     return a.exec();
 }

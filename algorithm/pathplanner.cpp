@@ -8,7 +8,7 @@ PathPlanner::PathPlanner()
 
 void PathPlanner::plan()
 {
-    if (path.size() > 0){
+    if(path.size() > 0){
         while (hasArrived(path.front()))
         {
             qDebug() << "has arrived";
@@ -36,16 +36,23 @@ void PathPlanner::rotateToPoint(MyPoint target)
     // 计算旋转速度的绝对值
     double rotVel = diffAngle * PARAMS::ROTATE_COFF; // need improve!!!
     // 计算旋转速度的方向
-    if (me_angle > targetAngle)
+    if(me_angle > targetAngle)
         rotVel *= -1;
-    if (fabs(me_angle - targetAngle) > PARAMS::MATH::PI)
+    if(fabs(me_angle - targetAngle) > PARAMS::MATH::PI)
         rotVel *= -1;
 
-    if (fabs(diffAngle) >= PARAMS::ANGLE_THRESHOLD) {
-        CommandSender::instance()->sendToSim(0,0,0,rotVel);
+    if(fabs(diffAngle) >= PARAMS::ANGLE_THRESHOLD){
+        if(PARAMS::IS_SIMULATION)
+            CommandSender::instance()->sendToSim(PARAMS::our_id,0,0,rotVel);
+        else
+            RealCommandSender::instance()->sendToReal(PARAMS::our_id,0,0,rotVel);
     }
-    else
-        CommandSender::instance()->sendToSim(0,0,0,0);
+    else{
+        if(PARAMS::IS_SIMULATION)
+            CommandSender::instance()->sendToSim(PARAMS::our_id,0,0,0);
+        else
+            RealCommandSender::instance()->sendToReal(PARAMS::our_id,0,0,0);
+    }
 }
 
 void PathPlanner::goToPoint(MyPoint target)
@@ -59,21 +66,31 @@ void PathPlanner::goToPoint(MyPoint target)
     // 计算旋转速度的绝对值
     double rotVel = diffAngle * PARAMS::FORWARD_ROTATE_COFF; // need improve!!!
     // 计算旋转速度的方向
-    if (me_angle > targetAngle)
+    if(me_angle > targetAngle)
         rotVel *= -1;
-    if (fabs(me_angle - targetAngle) > PARAMS::MATH::PI)
+    if(fabs(me_angle - targetAngle) > PARAMS::MATH::PI)
         rotVel *= -1;
 
-    if (fabs(diffAngle) >= PARAMS::FORWARD_ANGLE_THRESHOLD) {
-        CommandSender::instance()->sendToSim(0,0,0,rotVel);
+    if(fabs(diffAngle) >= PARAMS::FORWARD_ANGLE_THRESHOLD) {
+        if(PARAMS::IS_SIMULATION)
+            CommandSender::instance()->sendToSim(PARAMS::our_id,0,0,rotVel);
+        else
+            RealCommandSender::instance()->sendToReal(PARAMS::our_id,0,0,rotVel);
     }
-    else
-        CommandSender::instance()->sendToSim(0,PARAMS::FORWARD_SPEED,0,rotVel);
+    else{
+        if(PARAMS::IS_SIMULATION)
+            CommandSender::instance()->sendToSim(PARAMS::our_id,PARAMS::FORWARD_SPEED,0,rotVel);
+        else
+            RealCommandSender::instance()->sendToReal(PARAMS::our_id,PARAMS::FORWARD_SPEED,0,rotVel);
+    }
 }
 
 void PathPlanner::stopMoving()
 {
-    CommandSender::instance()->sendToSim(0,0,0,0);
+    if(PARAMS::IS_SIMULATION)
+        CommandSender::instance()->sendToSim(PARAMS::our_id,0,0,0);
+    else
+        RealCommandSender::instance()->sendToReal(PARAMS::our_id,0,0,0);
 }
 
 void PathPlanner::updatePath(std::vector<Node> &nodePath)
