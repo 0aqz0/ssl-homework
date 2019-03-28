@@ -15,10 +15,11 @@ void DataManager::reset()
 
 RobotInfo& DataManager::ourRobot()
 {
+
     if (PARAMS::isBlue)
-        return blueRobots[PARAMS::our_id];
+        return blueRobots[PARAMS::IS_SIMULATION ? PARAMS::our_id : PARAMS::our_id-1];
     else
-        return yellowRobots[PARAMS::our_id];
+        return yellowRobots[PARAMS::IS_SIMULATION ? PARAMS::our_id : PARAMS::our_id-1];
 }
 
 void DataManager::setGoals(std::deque<MyPoint> new_goals)

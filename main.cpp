@@ -20,30 +20,20 @@ void pathPlanning()
     RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
     LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
 //    ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
+    qDebug() << "path planning!!!";
     while(true){
-        std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
-        LocalPlanner::instance()->updatePath(RRTStarPlanner::instance()->smoothPath);
+//        LocalPlanner::instance()->mutex.lock();
+        LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
+        VisualModule::instance()->drawTree(RRTPlanner::instance()->NodeList);
+        for(int i=0; i<RRTPlanner::instance()->smoothPath.size(); i++){
+            std::cout << RRTPlanner::instance()->smoothPath[i].x() << ", " << RRTPlanner::instance()->smoothPath[i].y() << "    ";
+        }
+        std::cout << std::endl;
+//        LocalPlanner::instance()->mutex.unlock();
 //        ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
         qDebug() << "path planning!!!";
-    }
-}
-
-void velSending()
-{
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    while(true){
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        if(LocalPlanner::instance()->hasArrived(MyDataManager::instance()->goals.front())){
-            MyDataManager::instance()->goals.push_back(MyDataManager::instance()->goals.front());
-            MyDataManager::instance()->goals.pop_front();
-            LocalPlanner::instance()->stopMoving();
-            LocalPlanner::instance()->clearPath();
-            qDebug() << "Change Goal to " << MyDataManager::instance()->goals.front().x() << MyDataManager::instance()->goals.front().y();
-        }
-        LocalPlanner::instance()->plan();
-//        VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
-        VisualModule::instance()->drawTree(RRTPlanner::instance()->NodeList);
     }
 }
 
@@ -56,11 +46,10 @@ int main(int argc, char *argv[])
     if(!PARAMS::IS_SIMULATION)
         serial.openSerialPort();
     // set Goals
-    std::deque<MyPoint> goals = { MyPoint(400, 0), MyPoint(0, 300), MyPoint(-400, 0), MyPoint(0, -300)};
+    std::deque<MyPoint> goals = { MyPoint(150, 0), MyPoint(0, 150), MyPoint(-150, 0), MyPoint(0, -150)};
     MyDataManager::instance()->setGoals(goals);
 
     std::thread* _thread1 = new std::thread([ = ] {pathPlanning();});
-    std::thread* _thread2 = new std::thread([ = ] {velSending();});
 
     return a.exec();
 }

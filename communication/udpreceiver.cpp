@@ -4,6 +4,7 @@
 #include "utils/params.h"
 #include "algorithm/pathplanner.h"
 #include "udpsender.h"
+#include "algorithm/rrt.h"
 
 extern serialSender serial;
 
@@ -27,7 +28,7 @@ void UDPReceiver::readDatagrams(){
         datagram.resize(receiver->pendingDatagramSize());
         receiver->readDatagram(datagram.data(), datagram.size());
         // qDebug() << "Receiving: " << datagram.data();
-        qDebug() << "Receiving data!!!";
+        // qDebug() << "Receiving data!!!";
 
         // Parse from datagram
         Vision_DetectionFrame vision;
@@ -98,10 +99,19 @@ void UDPReceiver::readDatagrams(){
             else
                 MyDataManager::instance()->yellowRobots[robot_id].rotate_vel = 9999;
         }
-        qDebug() << LocalPlanner::instance()->velX << LocalPlanner::instance()->velY << LocalPlanner::instance()->velW;
-        if(PARAMS::IS_SIMULATION)
-            CommandSender::instance()->sendToSim(PARAMS::our_id, LocalPlanner::instance()->velX, LocalPlanner::instance()->velY, LocalPlanner::instance()->velW);
-        else
-            serial.sendToReal(PARAMS::our_id, LocalPlanner::instance()->velX*100, LocalPlanner::instance()->velY*100, LocalPlanner::instance()->velW*100);
+
+        if(LocalPlanner::instance()->hasArrived(MyDataManager::instance()->goals.front())){
+            MyDataManager::instance()->goals.push_back(MyDataManager::instance()->goals.front());
+            MyDataManager::instance()->goals.pop_front();
+            LocalPlanner::instance()->stopMoving();
+            LocalPlanner::instance()->clearPath();
+            qDebug() << "Change Goal to " << MyDataManager::instance()->goals.front().x() << MyDataManager::instance()->goals.front().y();
+        }
+        LocalPlanner::instance()->plan();
+//        qDebug() <<MyDataManager::instance()->yellowRobots[2].x <<MyDataManager::instance()->yellowRobots[2].y;
+//        if(PARAMS::IS_SIMULATION)
+//            CommandSender::instance()->sendToSim(PARAMS::our_id, LocalPlanner::instance()->velX, LocalPlanner::instance()->velY, LocalPlanner::instance()->velW);
+//        else
+//            serial.sendToReal(PARAMS::our_id, LocalPlanner::instance()->velX*100, LocalPlanner::instance()->velY*100, -LocalPlanner::instance()->velW*20);
     }
 }

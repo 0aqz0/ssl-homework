@@ -21,7 +21,7 @@ namespace PARAMS {
     }
 
     // serial sender
-    const QString serialPort = "COM7";
+    const QString serialPort = "COM17";
     const int frequency = 0;
     const int TRANSMIT_PACKET_SIZE = 25;
 
@@ -35,7 +35,7 @@ namespace PARAMS {
     // path planning
     const double ANGLE_THRESHOLD = 0.1;
     const double FORWARD_ANGLE_THRESHOLD = 0.3;
-    const double ROTATE_COFF = 4.0;
+    const double ROTATE_COFF = 4;
     const double FORWARD_SPEED = 1.0;
     const double FORWARD_ROTATE_COFF = 3.0;
 

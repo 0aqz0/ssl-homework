@@ -133,7 +133,7 @@ void serialSender::encode(int robotID, int velX, int velY, int velR, bool ctrl, 
 void serialSender::sendToReal(int robot_id, int vel_x, int vel_y, int vel_w)
 {
     encode(robot_id-1, vel_x, vel_y, vel_w);
-    qDebug() << "0x" << transmitPacket.toHex();
+//    qDebug() << "0x" << transmitPacket.toHex();
     serial.write(transmitPacket.data(), PARAMS::TRANSMIT_PACKET_SIZE);
 //    serial.flush();
     serial.waitForBytesWritten(-1);

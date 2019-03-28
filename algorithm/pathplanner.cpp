@@ -61,6 +61,7 @@ void PathPlanner::goToPoint(MyPoint target)
     double me_angle = MyDataManager::instance()->ourRobot().orientation;
 
     double diffAngle = fabs(me_angle - targetAngle);
+//    qDebug() <<"angle" <<me_angle << MyDataManager::instance()->blueRobots[1].orientation << MyDataManager::instance()->blueRobots[2].orientation <<MyDataManager::instance()->blueRobots[0].orientation;
     diffAngle = diffAngle > PARAMS::MATH::PI ? 2*PARAMS::MATH::PI - diffAngle : diffAngle;
     // 计算旋转速度的绝对值
     double rotVel = diffAngle * PARAMS::FORWARD_ROTATE_COFF; // need improve!!!
