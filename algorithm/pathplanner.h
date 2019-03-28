@@ -24,6 +24,9 @@ public:
     void updatePath(std::vector<Node> &nodePath);
     void updatePath(std::vector<MyPoint> &pointPath);
     void clearPath();
+    double velX;
+    double velY;
+    double velW;
 private:
     std::deque<MyPoint> path;
 };

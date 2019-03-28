@@ -4,14 +4,14 @@
 #include <QHostAddress>
 
 namespace PARAMS {
-    const bool IS_SIMULATION = true;
+    const bool IS_SIMULATION = false;
     const double ACCEPT_RADIUS = 10.0;
 
     // data manager
     const int ROBOT_NUM = 16;
 
     // our car
-    const int our_id = 0;
+    const int our_id = 2;
     const bool isBlue = true;
 
     // field

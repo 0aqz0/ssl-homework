@@ -12,6 +12,8 @@
 #include <thread>
 #include <iostream>
 
+serialSender serial;
+
 void pathPlanning()
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -20,10 +22,8 @@ void pathPlanning()
 //    ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
     while(true){
         std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-//        RRTStarPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x,MyDataManager::instance()->ourRobot().y, 500, 0);
-//        LocalPlanner::instance()->updatePath(RRTStarPlanner::instance()->smoothPath);
         RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
-        LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
+        LocalPlanner::instance()->updatePath(RRTStarPlanner::instance()->smoothPath);
 //        ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
         qDebug() << "path planning!!!";
     }
@@ -52,11 +52,9 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
     VisionReceiver::instance();
-
-    if(!PARAMS::IS_SIMULATION){
-        RealCommandSender::instance()->openSerialPort();
-        RealCommandSender::instance()->sendStartPacket();
-    }
+    // open serial
+    if(!PARAMS::IS_SIMULATION)
+        serial.openSerialPort();
     // set Goals
     std::deque<MyPoint> goals = { MyPoint(400, 0), MyPoint(0, 300), MyPoint(-400, 0), MyPoint(0, -300)};
     MyDataManager::instance()->setGoals(goals);

@@ -1,5 +1,6 @@
 #include "pathplanner.h"
 #include "communication/udpsender.h"
+#include "communication/serialsender.h"
 
 PathPlanner::PathPlanner()
 {
@@ -42,16 +43,14 @@ void PathPlanner::rotateToPoint(MyPoint target)
         rotVel *= -1;
 
     if(fabs(diffAngle) >= PARAMS::ANGLE_THRESHOLD){
-        if(PARAMS::IS_SIMULATION)
-            CommandSender::instance()->sendToSim(PARAMS::our_id,0,0,rotVel);
-        else
-            RealCommandSender::instance()->sendToReal(PARAMS::our_id,0,0,rotVel);
+        velX = 0;
+        velY = 0;
+        velW = rotVel;
     }
     else{
-        if(PARAMS::IS_SIMULATION)
-            CommandSender::instance()->sendToSim(PARAMS::our_id,0,0,0);
-        else
-            RealCommandSender::instance()->sendToReal(PARAMS::our_id,0,0,0);
+        velX = 0;
+        velY = 0;
+        velW = 0;
     }
 }
 
@@ -72,25 +71,22 @@ void PathPlanner::goToPoint(MyPoint target)
         rotVel *= -1;
 
     if(fabs(diffAngle) >= PARAMS::FORWARD_ANGLE_THRESHOLD) {
-        if(PARAMS::IS_SIMULATION)
-            CommandSender::instance()->sendToSim(PARAMS::our_id,0,0,rotVel);
-        else
-            RealCommandSender::instance()->sendToReal(PARAMS::our_id,0,0,rotVel);
+        velX = 0;
+        velY = 0;
+        velW = rotVel;
     }
     else{
-        if(PARAMS::IS_SIMULATION)
-            CommandSender::instance()->sendToSim(PARAMS::our_id,PARAMS::FORWARD_SPEED,0,rotVel);
-        else
-            RealCommandSender::instance()->sendToReal(PARAMS::our_id,PARAMS::FORWARD_SPEED,0,rotVel);
+        velX = PARAMS::FORWARD_SPEED;
+        velY = 0;
+        velW = rotVel;
     }
 }
 
 void PathPlanner::stopMoving()
 {
-    if(PARAMS::IS_SIMULATION)
-        CommandSender::instance()->sendToSim(PARAMS::our_id,0,0,0);
-    else
-        RealCommandSender::instance()->sendToReal(PARAMS::our_id,0,0,0);
+    velX = 0;
+    velY = 0;
+    velW = 0;
 }
 
 void PathPlanner::updatePath(std::vector<Node> &nodePath)

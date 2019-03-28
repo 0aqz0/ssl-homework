@@ -2,6 +2,10 @@
 #include "proto/vision_detection.pb.h"
 #include "utils/datamanager.h"
 #include "utils/params.h"
+#include "algorithm/pathplanner.h"
+#include "udpsender.h"
+
+extern serialSender serial;
 
 UDPReceiver::UDPReceiver(QObject* parent) : QObject(parent)
 {
@@ -23,7 +27,7 @@ void UDPReceiver::readDatagrams(){
         datagram.resize(receiver->pendingDatagramSize());
         receiver->readDatagram(datagram.data(), datagram.size());
         // qDebug() << "Receiving: " << datagram.data();
-        // qDebug() << "Receiving data!!!";
+        qDebug() << "Receiving data!!!";
 
         // Parse from datagram
         Vision_DetectionFrame vision;
@@ -94,11 +98,10 @@ void UDPReceiver::readDatagrams(){
             else
                 MyDataManager::instance()->yellowRobots[robot_id].rotate_vel = 9999;
         }
-        // debug
-//        for(int i=0; i<16; i++){
-//            qDebug() << "robot_id: " << i << "  " << MyDataManager::instance()->validBlueRobots[i];
-//            qDebug() << "robot_id: " << i << "  " << MyDataManager::instance()->validYellowRobots[i];
-//            qDebug() << "robot pos" << i << "  " << MyDataManager::instance()->blueRobots[i].x << "  " << MyDataManager::instance()->blueRobots[i].y;
-//        }
+        qDebug() << LocalPlanner::instance()->velX << LocalPlanner::instance()->velY << LocalPlanner::instance()->velW;
+        if(PARAMS::IS_SIMULATION)
+            CommandSender::instance()->sendToSim(PARAMS::our_id, LocalPlanner::instance()->velX, LocalPlanner::instance()->velY, LocalPlanner::instance()->velW);
+        else
+            serial.sendToReal(PARAMS::our_id, LocalPlanner::instance()->velX*100, LocalPlanner::instance()->velY*100, LocalPlanner::instance()->velW*100);
     }
 }
