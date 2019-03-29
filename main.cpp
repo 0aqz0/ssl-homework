@@ -10,7 +10,6 @@
 #include "algorithm/artifical_potential.h"
 #include "utils/visualizationmodule.h"
 #include <thread>
-#include <iostream>
 
 serialSender serial;
 
@@ -20,20 +19,20 @@ void pathPlanning()
     RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
     LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
 //    ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
-    qDebug() << "path planning!!!";
     while(true){
         std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
-//        LocalPlanner::instance()->mutex.lock();
         LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
-        VisualModule::instance()->drawTree(RRTPlanner::instance()->NodeList);
-        for(int i=0; i<RRTPlanner::instance()->smoothPath.size(); i++){
-            std::cout << RRTPlanner::instance()->smoothPath[i].x() << ", " << RRTPlanner::instance()->smoothPath[i].y() << "    ";
-        }
-        std::cout << std::endl;
-//        LocalPlanner::instance()->mutex.unlock();
 //        ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
         qDebug() << "path planning!!!";
+    }
+}
+
+void debugMsg(){
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    while(true){
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        VisualModule::instance()->drawTree(RRTPlanner::instance()->NodeList);
     }
 }
 
@@ -50,6 +49,7 @@ int main(int argc, char *argv[])
     MyDataManager::instance()->setGoals(goals);
 
     std::thread* _thread1 = new std::thread([ = ] {pathPlanning();});
+    std::thread* _thread2 = new std::thread([ = ] {debugMsg();});
 
     return a.exec();
 }

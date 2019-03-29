@@ -15,7 +15,6 @@ UDPReceiver::UDPReceiver(QObject* parent) : QObject(parent)
     if(!PARAMS::IS_SIMULATION)
         receiver->joinMulticastGroup(QHostAddress("224.5.23.2"));
     connect(receiver, SIGNAL(readyRead()), this, SLOT(readDatagrams()), Qt::DirectConnection);
-//     qDebug() << "I'm Receiver";
 }
 
 UDPReceiver::~UDPReceiver(){
@@ -27,7 +26,6 @@ void UDPReceiver::readDatagrams(){
         QByteArray datagram;
         datagram.resize(receiver->pendingDatagramSize());
         receiver->readDatagram(datagram.data(), datagram.size());
-        // qDebug() << "Receiving: " << datagram.data();
         // qDebug() << "Receiving data!!!";
 
         // Parse from datagram
@@ -100,6 +98,7 @@ void UDPReceiver::readDatagrams(){
                 MyDataManager::instance()->yellowRobots[robot_id].rotate_vel = 9999;
         }
 
+        // vel sending
         if(LocalPlanner::instance()->hasArrived(MyDataManager::instance()->goals.front())){
             MyDataManager::instance()->goals.push_back(MyDataManager::instance()->goals.front());
             MyDataManager::instance()->goals.pop_front();
@@ -109,9 +108,9 @@ void UDPReceiver::readDatagrams(){
         }
         LocalPlanner::instance()->plan();
 //        qDebug() <<MyDataManager::instance()->yellowRobots[2].x <<MyDataManager::instance()->yellowRobots[2].y;
-//        if(PARAMS::IS_SIMULATION)
-//            CommandSender::instance()->sendToSim(PARAMS::our_id, LocalPlanner::instance()->velX, LocalPlanner::instance()->velY, LocalPlanner::instance()->velW);
-//        else
-//            serial.sendToReal(PARAMS::our_id, LocalPlanner::instance()->velX*100, LocalPlanner::instance()->velY*100, -LocalPlanner::instance()->velW*20);
+        if(PARAMS::IS_SIMULATION)
+            CommandSender::instance()->sendToSim(PARAMS::our_id, LocalPlanner::instance()->velX, LocalPlanner::instance()->velY, LocalPlanner::instance()->velW);
+        else
+            serial.sendToReal(PARAMS::our_id, LocalPlanner::instance()->velX*100, LocalPlanner::instance()->velY*100, -LocalPlanner::instance()->velW*20);
     }
 }

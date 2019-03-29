@@ -107,8 +107,6 @@ void serialSender::encode(int robotID, int velX, int velY, int velR, bool ctrl, 
     transmitPacket[0] = 0x48;
     //RobotID
     transmitPacket[1] = (robotID) & 0x0f;
-//    transmitPacket[0] = transmitPacket[0] | 0x08;
-    //Robot1 Config
     //shoot or chip
     transmitPacket[1] = transmitPacket[1] | (shootMode << 6 );
     //power level
@@ -127,7 +125,6 @@ void serialSender::encode(int robotID, int velX, int velY, int velR, bool ctrl, 
     transmitPacket[17] = ((abs(velX) & 0x180) >> 1) | ((abs(velY) & 0x180) >> 3) | ((abs(velR) & 0x780) >> 7);
     //shoot power
     transmitPacket[21] = 0 & 0x7f;
-
 }
 
 void serialSender::sendToReal(int robot_id, int vel_x, int vel_y, int vel_w)
