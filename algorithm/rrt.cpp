@@ -18,7 +18,7 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
         double theta = atan2(randNode.y - NodeList[nearestNode].y, randNode.x - NodeList[nearestNode].x);
         int newNode_x = NodeList[nearestNode].x + PARAMS::RRT::STEP_SIZE*cos(theta);
         int newNode_y = NodeList[nearestNode].y + PARAMS::RRT::STEP_SIZE*sin(theta);
-
+//        qDebug() << "newNode: " << newNode_x << newNode_y;
         // outside the map
         if (newNode_x <= -PARAMS::FIELD::LENGTH/2 || newNode_y <= -PARAMS::FIELD::WIDTH/2 || newNode_x >= PARAMS::FIELD::LENGTH/2 || newNode_y >= PARAMS::FIELD::WIDTH/2)
             continue;
@@ -32,6 +32,7 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
         if (sqrt(pow(newNode_x-end_x,2)+pow(newNode_y-end_y,2)) < PARAMS::RRT::STEP_SIZE)
             break;
     }
+//    qDebug() <<"final";
     // generate the final path
     std::vector<MyPoint> tempPath;
     tempPath.clear();
