@@ -2,20 +2,18 @@
 #define UDPRECEIVER_H
 
 #include <QtNetwork>
-#include "utils/singleton.hpp"
 
-class UDPReceiver : public QObject
+class UDPReceiver
 {
-    Q_OBJECT
 public:
-    UDPReceiver(QObject* parent = nullptr);
-    ~UDPReceiver();
-private:
-    QUdpSocket *receiver;
-private slots:
+    static UDPReceiver* instance();
     void readDatagrams();
+private:
+    UDPReceiver();
+    ~UDPReceiver();
+    static UDPReceiver* _instance;
+    QUdpSocket *receiver;
 };
-typedef Singleton<UDPReceiver> VisionReceiver;
 
 
 #endif // UDPRECEIVER_H

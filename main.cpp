@@ -18,12 +18,10 @@ void pathPlanning()
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
     LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
-//    ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
     while(true){
         std::this_thread::sleep_for(std::chrono::milliseconds(3000));
         RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
         LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
-//        ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
 //        qDebug() << "path planning!!!";
     }
 }
@@ -41,7 +39,7 @@ void debugMsg(){
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
-    VisionReceiver::instance();
+    UDPReceiver::instance();
     // open serial
     if(!PARAMS::IS_SIMULATION)
         serial.openSerialPort();
@@ -51,6 +49,26 @@ int main(int argc, char *argv[])
 
     std::thread* _thread1 = new std::thread([ = ] {pathPlanning();});
     std::thread* _thread2 = new std::thread([ = ] {debugMsg();});
+
+    // vel sending
+    while(true){
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
+        if(LocalPlanner::instance()->hasArrived(MyDataManager::instance()->goals.front())){
+            MyDataManager::instance()->goals.push_back(MyDataManager::instance()->goals.front());
+            MyDataManager::instance()->goals.pop_front();
+            LocalPlanner::instance()->stopMoving();
+            LocalPlanner::instance()->clearPath();
+            qDebug() << "Change Goal to " << MyDataManager::instance()->goals.front().x() << MyDataManager::instance()->goals.front().y();
+        }
+        LocalPlanner::instance()->plan();
+//        qDebug() <<MyDataManager::instance()->yellowRobots[2].x <<MyDataManager::instance()->yellowRobots[2].y;
+        if(PARAMS::IS_SIMULATION)
+            CommandSender::instance()->sendToSim(PARAMS::our_id, LocalPlanner::instance()->velX, LocalPlanner::instance()->velY, LocalPlanner::instance()->velW);
+        else
+            serial.sendToReal(2, 30*LocalPlanner::instance()->velX, 0, -40*LocalPlanner::instance()->velW);
+//        qDebug() << "vel: "<< LocalPlanner::instance()->velX << LocalPlanner::instance()->velW;
+    }
 
     return a.exec();
 }
