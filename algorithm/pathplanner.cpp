@@ -77,7 +77,16 @@ void PathPlanner::goToPoint(MyPoint target)
         velW = rotVel;
     }
     else{
-        velX = PARAMS::FORWARD_SPEED;
+        if(fabs(me.vel_x-PARAMS::FORWARD_SPEED) <= PARAMS::FORWARD_SPEED_THRESHOLD)
+        {
+            velX = PARAMS::FORWARD_SPEED;
+        }
+        else
+        {
+            int flag = me.vel_x < PARAMS::FORWARD_SPEED ? 1 : -1;
+            velX = me.vel_x + flag*PARAMS::DV;
+        }
+
         velY = 0;
         velW = rotVel;
     }

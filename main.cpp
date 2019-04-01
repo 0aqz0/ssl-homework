@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     if(!PARAMS::IS_SIMULATION)
         serial.openSerialPort();
     // set Goals
-    std::deque<MyPoint> goals = { MyPoint(-300, 0), MyPoint(0, 150),  MyPoint(200, 0)}; // -300是边界
+    std::deque<MyPoint> goals = { MyPoint(-200, 0), MyPoint(0, 150),  MyPoint(200, 0)}; // -300是边界
     MyDataManager::instance()->setGoals(goals);
 
     std::thread* _thread1 = new std::thread([ = ] {pathPlanning();});

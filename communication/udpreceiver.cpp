@@ -111,6 +111,7 @@ void UDPReceiver::readDatagrams(){
         if(PARAMS::IS_SIMULATION)
             CommandSender::instance()->sendToSim(PARAMS::our_id, LocalPlanner::instance()->velX, LocalPlanner::instance()->velY, LocalPlanner::instance()->velW);
         else
+//            serial.sendToReal(2, 0, 0, -50*LocalPlanner::instance()->velW);
             serial.sendToReal(2, 30*LocalPlanner::instance()->velX, 0, -40*LocalPlanner::instance()->velW);
         qDebug() << "vel: "<< LocalPlanner::instance()->velX << LocalPlanner::instance()->velW;
     }
