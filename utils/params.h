@@ -74,6 +74,11 @@ namespace PARAMS {
         const double INFLATION_RADIUS_SQUARE = 900.0;
         const double STEP_SIZE = 10;
     }
+
+    namespace DEBUG {
+        // switch for artifical potential message
+        const bool kAPDebugMessage = false;
+    }
 }
 
 #endif // PARAMS_H
