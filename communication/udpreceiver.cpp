@@ -5,6 +5,7 @@
 #include "algorithm/pathplanner.h"
 #include "udpsender.h"
 #include "algorithm/rrt.h"
+#include "algorithm/artifical_potential.h"
 
 extern serialSender serial;
 
@@ -111,7 +112,11 @@ void UDPReceiver::readDatagrams(){
         if(PARAMS::IS_SIMULATION)
             CommandSender::instance()->sendToSim(PARAMS::our_id, LocalPlanner::instance()->velX, LocalPlanner::instance()->velY, LocalPlanner::instance()->velW);
         else
-            serial.sendToReal(2, 30*LocalPlanner::instance()->velX, 0, -40*LocalPlanner::instance()->velW);
-        qDebug() << "vel: "<< LocalPlanner::instance()->velX << LocalPlanner::instance()->velW;
+//            serial.sendToReal(2, 30*LocalPlanner::instance()->velX, 0, -40*LocalPlanner::instance()->velW);
+//            serial.sendToReal(2, 30, 30, 0);
+            serial.sendToReal(2, 70 * ApPlanner::instance()->v_x,
+                              70 * ApPlanner::instance()->v_y,
+                              -40 * ApPlanner::instance()->v_w);
+//        qDebug() << "vel: "<< LocalPlanner::instance()->velX << LocalPlanner::instance()->velW;
     }
 }

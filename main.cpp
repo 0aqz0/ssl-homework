@@ -16,14 +16,14 @@ serialSender serial;
 void pathPlanning()
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
-    LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
-//    ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
+//    RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
+//    LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
+    ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
     while(true){
-        std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-        RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
-        LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
-//        ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
+        std::this_thread::sleep_for(std::chrono::milliseconds(30));
+//        RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
+//        LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
+        ApPlanner::instance()->plan( MyDataManager::instance()->goals.front() );
 //        qDebug() << "path planning!!!";
     }
 }
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     if(!PARAMS::IS_SIMULATION)
         serial.openSerialPort();
     // set Goals
-    std::deque<MyPoint> goals = { MyPoint(-300, 0), MyPoint(0, 150),  MyPoint(200, 0)}; // -300是边界
+    std::deque<MyPoint> goals = { MyPoint(-200, 0), MyPoint(0, 150),  MyPoint(200, 0)}; // -300是边界
     MyDataManager::instance()->setGoals(goals);
 
     std::thread* _thread1 = new std::thread([ = ] {pathPlanning();});

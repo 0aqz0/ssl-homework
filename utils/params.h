@@ -11,7 +11,7 @@ namespace PARAMS {
     const int ROBOT_NUM = 12;
 
     // our car
-    const int our_id = 5;  //从1开始
+    const int our_id = 2;  //从1开始
     const bool isBlue = true;
 
     // field
@@ -21,7 +21,7 @@ namespace PARAMS {
     }
 
     // serial sender
-    const QString serialPort = "COM8";
+    const QString serialPort = "COM3";
     const int frequency = 0;
     const int TRANSMIT_PACKET_SIZE = 25;
 
