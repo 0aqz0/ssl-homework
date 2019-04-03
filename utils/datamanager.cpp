@@ -1,6 +1,6 @@
 #include "datamanager.h"
 
-DataManager::DataManager()
+DataManager::DataManager() : cycle(0)
 {
     reset();
 }
@@ -15,7 +15,6 @@ void DataManager::reset()
 
 RobotInfo& DataManager::ourRobot()
 {
-
     if (PARAMS::isBlue)
         return blueRobots[PARAMS::IS_SIMULATION ? PARAMS::our_id : PARAMS::our_id-1];
     else
@@ -25,4 +24,12 @@ RobotInfo& DataManager::ourRobot()
 void DataManager::setGoals(std::deque<MyPoint> new_goals)
 {
     goals = new_goals;
+}
+
+void DataManager::updateCycle()
+{
+    if(cycle < 4000000000)
+        cycle++;
+    else
+        cycle = 0;
 }

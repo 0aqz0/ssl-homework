@@ -69,62 +69,64 @@ void serialSender::encode(int robotID, int velX, int velY, int velR, bool ctrl, 
     for (int i=0; i<PARAMS::TRANSMIT_PACKET_SIZE; i++){
         transmitPacket[i] = 0x00;
     }
-//    transmitPacket[0] = 0xff;
-//    //RobotID
-//    if(robot_id >= 8)
-//        transmitPacket[1] = 0x01 << (robot_id - 8);
-//    else
-//        transmitPacket[1] = 0x00;
-//    transmitPacket[2] =  0x01 << robot_id;
-//    // misc
-//    transmitPacket[3] = transmitPacket[3] | (ctrl << 7);
-//    //shoot or chip
-//    transmitPacket[3] = transmitPacket[3] | (shootMode << 6);
-//    //power level
-//    transmitPacket[3] = transmitPacket[3] | (ctrlPowerLevel << 4);
-//    // other
-//    transmitPacket[3] = transmitPacket[3] & 0xf0;
-//    transmitPacket[3] = transmitPacket[3] | 0x01;
-
-//    // velx
-//    if(vel_x < 0) transmitPacket[4] = transmitPacket[4] | (0x20);
-//    transmitPacket[4] = transmitPacket[4] | ((abs(vel_x) & 0x1f0) >> 4);
-////    qDebug() << "ddq debuging: " << (abs(velX) & 0x1f0);
-//    transmitPacket[5] = transmitPacket[5] | ((abs(vel_x) & 0x0f) << 4);
-//    // vely
-//    if(vel_y < 0) transmitPacket[5] = transmitPacket[5] | (0x08);
-//    transmitPacket[5] = transmitPacket[5] | ((abs(vel_y) & 0x1c0) >> 6);
-//    transmitPacket[6] = transmitPacket[6] | ((abs(vel_y) & 0x3f) << 2);
-//    // w
-//    if(vel_w < 0) transmitPacket[6] = transmitPacket[6] | 0x02;
-//    transmitPacket[6] = transmitPacket[6] | ((abs(vel_w) & 0x100) >> 8);
-//    transmitPacket[7] = transmitPacket[7] | (abs(vel_w) & 0x0ff);
-
-//    // shoot power
-//    transmitPacket[8] = 0x00;
-
-//    transmitPacket[21] = 0x07;
-    transmitPacket[0] = 0x48;
+    transmitPacket[0] = 0xff;
     //RobotID
-    transmitPacket[1] = (robotID) & 0x0f;
+    if(robotID >= 8)
+        transmitPacket[1] = 0x01 << (robotID - 8);
+    else
+        transmitPacket[1] = 0x00;
+    transmitPacket[2] =  0x01 << robotID;
+    // misc
+    transmitPacket[3] = transmitPacket[3] | (ctrl << 7);
     //shoot or chip
-    transmitPacket[1] = transmitPacket[1] | (shootMode << 6 );
+    transmitPacket[3] = transmitPacket[3] | (shootMode << 6);
     //power level
-    transmitPacket[1] = transmitPacket[1] | (ctrl ? (ctrlPowerLevel << 4):0);
-    //速度的低位
-    transmitPacket[2] = ((velX >= 0)?0:0x80) | (abs(velX) & 0x7f);
-    transmitPacket[3] = ((velY >= 0)?0:0x80) | (abs(velY) & 0x7f);
-    transmitPacket[4] = ((velR >= 0)?0:0x80) | (abs(velR) & 0x7f);
-    //Don't understand !
-    if(transmitPacket[2] == char(0xff)) transmitPacket[4] = 0xfe;
-    if(transmitPacket[3] == char(0xff)) transmitPacket[5] = 0xfe;
-    if(transmitPacket[4] == char(0xff)) transmitPacket[6] = 0xfe;
-    //clear Byte[17-24]
-    transmitPacket[17] = transmitPacket[18] = transmitPacket[19] = transmitPacket[20] = transmitPacket[21] = transmitPacket[22] = transmitPacket[23] = transmitPacket[24] = 0;
-    //速度的高位
-    transmitPacket[17] = ((abs(velX) & 0x180) >> 1) | ((abs(velY) & 0x180) >> 3) | ((abs(velR) & 0x780) >> 7);
-    //shoot power
-    transmitPacket[21] = 0 & 0x7f;
+    transmitPacket[3] = transmitPacket[3] | (ctrlPowerLevel << 4);
+    // other
+    transmitPacket[3] = transmitPacket[3] & 0xf0;
+    transmitPacket[3] = transmitPacket[3] | 0x01;
+
+    // velx
+    if(velX < 0) transmitPacket[4] = transmitPacket[4] | (0x20);
+    transmitPacket[4] = transmitPacket[4] | ((abs(velX) & 0x1f0) >> 4);
+//    qDebug() << "ddq debuging: " << (abs(velX) & 0x1f0);
+    transmitPacket[5] = transmitPacket[5] | ((abs(velX) & 0x0f) << 4);
+    // vely
+    if(velY < 0) transmitPacket[5] = transmitPacket[5] | (0x08);
+    transmitPacket[5] = transmitPacket[5] | ((abs(velY) & 0x1c0) >> 6);
+    transmitPacket[6] = transmitPacket[6] | ((abs(velY) & 0x3f) << 2);
+    // w
+    if(velR < 0) transmitPacket[6] = transmitPacket[6] | 0x02;
+    transmitPacket[6] = transmitPacket[6] | ((abs(velR) & 0x100) >> 8);
+    transmitPacket[7] = transmitPacket[7] | (abs(velR) & 0x0ff);
+
+    // shoot power
+    transmitPacket[8] = 0x00;
+
+    transmitPacket[21] = 0x07;
+
+
+//    transmitPacket[0] = 0x48;
+//    //RobotID
+//    transmitPacket[1] = (robotID) & 0x0f;
+//    //shoot or chip
+//    transmitPacket[1] = transmitPacket[1] | (shootMode << 6 );
+//    //power level
+//    transmitPacket[1] = transmitPacket[1] | (ctrl ? (ctrlPowerLevel << 4):0);
+//    //速度的低位
+//    transmitPacket[2] = ((velX >= 0)?0:0x80) | (abs(velX) & 0x7f);
+//    transmitPacket[3] = ((velY >= 0)?0:0x80) | (abs(velY) & 0x7f);
+//    transmitPacket[4] = ((velR >= 0)?0:0x80) | (abs(velR) & 0x7f);
+//    //Don't understand !
+//    if(transmitPacket[2] == char(0xff)) transmitPacket[4] = 0xfe;
+//    if(transmitPacket[3] == char(0xff)) transmitPacket[5] = 0xfe;
+//    if(transmitPacket[4] == char(0xff)) transmitPacket[6] = 0xfe;
+//    //clear Byte[17-24]
+//    transmitPacket[17] = transmitPacket[18] = transmitPacket[19] = transmitPacket[20] = transmitPacket[21] = transmitPacket[22] = transmitPacket[23] = transmitPacket[24] = 0;
+//    //速度的高位
+//    transmitPacket[17] = ((abs(velX) & 0x180) >> 1) | ((abs(velY) & 0x180) >> 3) | ((abs(velR) & 0x780) >> 7);
+//    //shoot power
+//    transmitPacket[21] = 0 & 0x7f;
 }
 
 void serialSender::sendToReal(int robot_id, int vel_x, int vel_y, int vel_w)

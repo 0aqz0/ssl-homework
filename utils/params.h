@@ -4,14 +4,14 @@
 #include <QHostAddress>
 
 namespace PARAMS {
-    const bool IS_SIMULATION = true;
+    const bool IS_SIMULATION = false;
     const double ACCEPT_RADIUS = 10.0;
 
     // data manager
     const int ROBOT_NUM = 12;
 
     // our car
-    const int our_id = 2;  //从1开始
+    const int our_id = 5;  //从1开始
     const bool isBlue = true;
 
     // field
@@ -21,7 +21,7 @@ namespace PARAMS {
     }
 
     // serial sender
-    const QString serialPort = "COM3";
+    const QString serialPort = "COM17";
     const int frequency = 0;
     const int TRANSMIT_PACKET_SIZE = 25;
 
@@ -36,7 +36,7 @@ namespace PARAMS {
     const double ANGLE_THRESHOLD = 0.1;
     const double FORWARD_ANGLE_THRESHOLD = 0.3;
     const double ROTATE_COFF = 4;
-    const double FORWARD_SPEED = 1.0;
+    const double FORWARD_SPEED = 3.0;
     const double FORWARD_ROTATE_COFF = 3.0;
     const double DV = 2.0;
     const double FORWARD_SPEED_THRESHOLD = 3.0;
@@ -70,7 +70,7 @@ namespace PARAMS {
 
     // obstacle module
     namespace OBSTACLE {
-        const double INFLATION_RADIUS = 30.0;
+        const double INFLATION_RADIUS = 50.0;
         const double INFLATION_RADIUS_SQUARE = 900.0;
         const double STEP_SIZE = 10;
     }

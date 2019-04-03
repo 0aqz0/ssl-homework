@@ -77,16 +77,16 @@ void PathPlanner::goToPoint(MyPoint target)
         velW = rotVel;
     }
     else{
-        if(fabs(me.vel_x-PARAMS::FORWARD_SPEED) <= PARAMS::FORWARD_SPEED_THRESHOLD)
-        {
-            velX = PARAMS::FORWARD_SPEED;
-        }
-        else
-        {
-            int flag = me.vel_x < PARAMS::FORWARD_SPEED ? 1 : -1;
-            velX = me.vel_x + flag*PARAMS::DV;
-        }
-
+//        if(fabs(me.vel_x-PARAMS::FORWARD_SPEED) <= PARAMS::FORWARD_SPEED_THRESHOLD)
+//        {
+//            velX = PARAMS::FORWARD_SPEED;
+//        }
+//        else
+//        {
+//            int flag = me.vel_x < PARAMS::FORWARD_SPEED ? 1 : -1;
+//            velX = me.vel_x + flag*PARAMS::DV;
+//        }
+        velX = PARAMS::FORWARD_SPEED;
         velY = 0;
         velW = rotVel;
     }
@@ -94,6 +94,9 @@ void PathPlanner::goToPoint(MyPoint target)
 
 void PathPlanner::stopMoving()
 {
+//    RobotInfo& me = MyDataManager::instance()->ourRobot();
+//    if(me.vel_x < PARAMS::FORWARD_SPEED_THRESHOLD) velX = 0;
+//    else velX = me.velx - PARAMS::DV;
     velX = 0;
     velY = 0;
     velW = 0;

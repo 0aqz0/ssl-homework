@@ -111,6 +111,9 @@ void UDPReceiver::readDatagrams(){
                 else
                     MyDataManager::instance()->yellowRobots[robot_id].rotate_vel = 9999;
             }
+
+            // Update cycle
+            MyDataManager::instance()->updateCycle();
         }
     }
 }
