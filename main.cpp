@@ -11,6 +11,7 @@
 #include "algorithm/obstacles.h"
 #include "utils/visualizationmodule.h"
 #include <thread>
+#include <iostream>
 
 bool updateRRT()
 {
@@ -77,7 +78,7 @@ int main(int argc, char *argv[])
     }
 
     // set Goals
-    std::deque<MyPoint> goals = { MyPoint(200, 0), MyPoint(0, 100),  MyPoint(200, 0)}; // -300是边界
+    std::deque<MyPoint> goals = { MyPoint(200, 0), MyPoint(0, 100),  MyPoint(-200, 0)}; // -300是边界
     MyDataManager::instance()->setGoals(goals);
 
     std::thread* _thread1 = new std::thread([ = ] {pathPlanning();});
@@ -89,8 +90,11 @@ int main(int argc, char *argv[])
 
         USE_POTENTIAL = ApPlanner::instance()->plan(MyDataManager::instance()->goals.front());
 
-        if(!USE_POTENTIAL && false){
+        if(!USE_POTENTIAL || true){
             // change goals
+            if (PARAMS::DEBUG::kShowPathPlanner){
+                std::cout << "[main.cpp] use RRT" << std::endl;
+            }
             if(LocalPlanner::instance()->hasArrived(MyDataManager::instance()->goals.front())){
                 MyDataManager::instance()->goals.push_back(MyDataManager::instance()->goals.front());
                 MyDataManager::instance()->goals.pop_front();
@@ -109,6 +113,9 @@ int main(int argc, char *argv[])
     //        qDebug() << "vel: "<< LocalPlanner::instance()->velX << LocalPlanner::instance()->velW;
         }
         else{
+            if (PARAMS::DEBUG::kShowPathPlanner){
+                std::cout << "[main.cpp] use artifical potential" << std::endl;
+            }
             if ( PARAMS::IS_SIMULATION ){
                  CommandSender::instance()->sendToSim(PARAMS::our_id,
                                                       ApPlanner::instance()->v_x / 1000,
@@ -120,7 +127,8 @@ int main(int argc, char *argv[])
 //                                                      0);
             }
             else {
-                serial.sendToReal(2, ApPlanner::instance()->v_x / 10,
+                serial.sendToReal(2,
+                                  ApPlanner::instance()->v_x / 10,
                                   ApPlanner::instance()->v_y / 10,
                                   -40 * ApPlanner::instance()->v_w);
             }

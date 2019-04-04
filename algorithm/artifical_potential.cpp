@@ -14,31 +14,40 @@ namespace{
 const int m = 3;
 const int n = 2;
 const float alpha_p = 1.0;
-const float alpha_v = 0;
-const float m_attractive = 1200;  // virtual mass of attractive potential field
-const float m_repulsive = 0.05;  // virtual mass of repulsive potential field
-const float MAX_ACC = 300;
+const float alpha_v = 5;
+// virtual mass of attractive potential field
+// for sim
+//const float m_attractive = 1200;
+// for real
+const float m_attractive = 12;
+// virtual mass of repulsive potential field
+// for sim
+//const float m_repulsive = 0.05;
+// for real
+const float m_repulsive = 0.00005;
+const float MAX_ACC = 1000;
 const float MAX_SPEED = 1500;
-const float eta = 18000.0;  // positive constant
-const float rou_0 = 100;  // a positive constant describing the influence range of
+const float eta = 7500.0;  // positive constant
+const float rou_0 = 110;  // a positive constant describing the influence range of
                         // the obstacle
 }
 
+// change Athena axis y up
 //void ArtificalPotential::plan( MyPoint target, MyVector v_target ){
 bool ArtificalPotential::plan( MyPoint target ){
+    target.Sety(-target.y());
     bool if_use_artifical_potential = false;
     if ( PARAMS::DEBUG::kAPDebugMessage ){
         std::cout << "\n==============  [artifical_potenial.cpp] debug  ======="
                         "========" << std::endl;
     }
 
-//    RobotInfo& me = MyDataManager::instance()->blueRobots[1];
     RobotInfo& me = MyDataManager::instance()->ourRobot();
     MyVector v_target( 0, 0 );
-    MyPoint me_pos( me.x, me.y );
+    MyPoint me_pos( me.x, -me.y );
     MyVector me_vel;
-    me_vel.Setx(me.vel_x);  // real car feasible
-    me_vel.Sety(me.vel_y);  // real car feasible
+    me_vel.Setx(me.vel_x);
+    me_vel.Sety(me.vel_y);
 
     if ( PARAMS::DEBUG::kAPDebugMessage ) {
 //        std::cout << "me_vel.x                      : "
@@ -57,13 +66,21 @@ bool ArtificalPotential::plan( MyPoint target ){
 //                  << std::endl;
     }
 
+    if ( (target - me_pos).mod() < 30 ){
+        MyDataManager::instance()->
+                goals.push_back(MyDataManager::instance()->goals.front());
+        MyDataManager::instance()->goals.pop_front();
+        std::cout << "Change Goal to "
+                  << MyDataManager::instance()->goals.front().x()
+                  << MyDataManager::instance()->goals.front().y()
+                  << std::endl;
+    }
     MyVector f_attractive =
             ( target - me_pos ) * m * alpha_p *
             pow( (target - me_pos).mod(), m - 2 )
              + ( v_target - me_vel ) * n * alpha_v *
             pow( ( v_target - me_vel ).mod(), n - 2 );
-    MyVector acc_attractive = f_attractive / m_attractive ; // simulation
-    acc_attractive.Sety(-acc_attractive.y());  // real car feasible
+    MyVector acc_attractive = f_attractive / m_attractive ;
     float rou_s[PARAMS::ROBOT_NUM];
     float rou_m[PARAMS::ROBOT_NUM];
     MyVector f_rep1[PARAMS::ROBOT_NUM];
@@ -72,7 +89,7 @@ bool ArtificalPotential::plan( MyPoint target ){
     for ( int i = 0; i < PARAMS::ROBOT_NUM; i++ ){
         if ( MyDataManager::instance()->validYellowRobots[i] ){
             MyPoint yellow_pos( MyDataManager::instance()->yellowRobots[i].x,
-                                MyDataManager::instance()->yellowRobots[i].y );
+                                -MyDataManager::instance()->yellowRobots[i].y );
 
             if ( PARAMS::DEBUG::kAPDebugMessage ) {
                 std::cout << "Yellow id: " << i << std::endl;
@@ -92,6 +109,7 @@ bool ArtificalPotential::plan( MyPoint target ){
                 std::cout << "rou_s[i] - rou_m[i]           : "
                           << std::right << std::setw(12)
                           << rou_s[i] - rou_m[i]
+                          << "\n"
                           << std::endl;
 //                std::cout << "( me_vel - yellow_vel ) * n_ro: "
 //                          << std::right << std::setw(12)
@@ -125,19 +143,22 @@ bool ArtificalPotential::plan( MyPoint target ){
                         / MAX_ACC / ( rou_s[i] - rou_m[i] ) /
                         ( rou_s[i] - rou_m[i] );
                 f_rep = f_rep + f_rep1[i] + f_rep2[i];
-                if_use_artifical_potential = true;
+                if ( yellow_vel.mod() > 10 )
+                    if_use_artifical_potential = true;
             }
             else{
-                std::cout << "[artifical_potential.cpp] ERROR, crush happen!\n"
-                          << std::endl;
+                if ( PARAMS::DEBUG::kAPDebugMessage ){
+                    std::cout << "[artifical_potential.cpp] not defined!\n"
+                              << std::endl;
+                }
             }
         }
     }
     for ( int i = 0; i < PARAMS::ROBOT_NUM; i++ ){
         if ( MyDataManager::instance()->validBlueRobots[i] &&
-             i != PARAMS::our_id ){
+             i != PARAMS::our_id - 1 ){
             MyPoint blue_pos( MyDataManager::instance()->blueRobots[i].x,
-                                MyDataManager::instance()->blueRobots[i].y );
+                               -MyDataManager::instance()->blueRobots[i].y );
 
             if ( PARAMS::DEBUG::kAPDebugMessage ) {
                 std::cout << "Blue id: " << i << std::endl;
@@ -157,6 +178,7 @@ bool ArtificalPotential::plan( MyPoint target ){
                 std::cout << "rou_s[i] - rou_m[i]           : "
                           << std::right << std::setw(12)
                           << rou_s[i] - rou_m[i]
+                          << "\n"
                           << std::endl;
 //                std::cout << "( me_vel - blue_vel ) * n_ro  : "
 //                          << std::right << std::setw(12)
@@ -189,21 +211,29 @@ bool ArtificalPotential::plan( MyPoint target ){
                         / MAX_ACC / ( rou_s[i] - rou_m[i] ) /
                         ( rou_s[i] - rou_m[i] );
                 f_rep = f_rep + f_rep1[i] + f_rep2[i];
-                if_use_artifical_potential = true;
+                if ( blue_vel.mod() > 10 )
+                    if_use_artifical_potential = true;
             }
             else{
-                std::cout << "[ap.cpp] ERROR, crush happen!" << std::endl;
+                if ( PARAMS::DEBUG::kAPDebugMessage ){
+                    std::cout << "[artifical_potential.cpp] not defined!\n"
+                              << std::endl;
+                }
             }
         }
     }
 
-    MyVector acc_repulsive = f_rep / m_repulsive;  // simulation
+    MyVector acc_repulsive = f_rep / m_repulsive;
 
-//    if ( !PARAMS::IS_SIMULATION ){
-//        acc_repulsive.Sety(-acc_repulsive.y());
-//    }
+//    MyVector acc_tol = acc_attractive + acc_repulsive;
+    MyVector acc_tol;
+    if ( me_vel.mod() > MAX_SPEED * 0.5 ){
+        acc_tol = acc_repulsive;
+    }
+    else{
+        acc_tol = acc_attractive + acc_repulsive;
+    }
 
-    MyVector acc_tol = acc_attractive + acc_repulsive;
     if ( acc_tol.mod() > MAX_ACC ){
         acc_tol = acc_tol.Unitization() * MAX_ACC;
     }
@@ -221,7 +251,6 @@ bool ArtificalPotential::plan( MyPoint target ){
         v_y = - next_step_vel.x() * sin(dir) + next_step_vel.y() * cos(dir);
     }
     else {
-    // real car feasible
         v_x = next_step_vel.x() * cos(dir) + next_step_vel.y() * sin(dir);
         v_y = next_step_vel.x() * sin(dir) - next_step_vel.y() * cos(dir);
     }

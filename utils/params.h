@@ -4,14 +4,14 @@
 #include <QHostAddress>
 
 namespace PARAMS {
-    const bool IS_SIMULATION = true;
+    const bool IS_SIMULATION = false;
     const double ACCEPT_RADIUS = 25.0;
 
     // data manager
     const int ROBOT_NUM = 12;
 
     // our car
-    const int our_id = 0;  //从1开始
+    const int our_id = 5;  //从1开始
     const bool isBlue = true;
 
     // field
@@ -77,7 +77,8 @@ namespace PARAMS {
 
     namespace DEBUG {
         // switch for artifical potential message
-        const bool kAPDebugMessage = true;
+        const bool kAPDebugMessage = false;
+        const bool kShowPathPlanner = false;
     }
 }
 
