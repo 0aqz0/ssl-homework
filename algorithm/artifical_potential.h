@@ -7,7 +7,7 @@
 class ArtificalPotential{
 public:
 //    void plan( MyPoint target, MyVector v_target );
-    void plan( MyPoint target );
+    bool plan( MyPoint target );
     float v_x = 0;
     float v_y = 0;
     float v_w = 0;
