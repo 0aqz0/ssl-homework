@@ -21,7 +21,7 @@ namespace PARAMS {
     }
 
     // serial sender
-    const QString serialPort = "COM17";
+    const QString serialPort = "COM6";
     const int frequency = 0;
     const int TRANSMIT_PACKET_SIZE = 25;
 
@@ -78,6 +78,7 @@ namespace PARAMS {
     namespace DEBUG {
         // switch for artifical potential message
         const bool kAPDebugMessage = false;
+        const bool kShowPathPlanner = false;
     }
 }
 

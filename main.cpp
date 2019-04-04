@@ -11,6 +11,7 @@
 #include "algorithm/obstacles.h"
 #include "utils/visualizationmodule.h"
 #include <thread>
+#include <iostream>
 
 bool updateRRT()
 {
@@ -55,7 +56,7 @@ void debugMsg(){
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     while(true){
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        qDebug() << "Nodelist size: " << RRTPlanner::instance()->NodeList.size();
+//        qDebug() << "Nodelist size: " << RRTPlanner::instance()->NodeList.size();
 //        VisualModule::instance()->drawTree(RRTPlanner::instance()->NodeList);
         VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
     }
@@ -77,7 +78,7 @@ int main(int argc, char *argv[])
     }
 
     // set Goals
-    std::deque<MyPoint> goals = { MyPoint(-200, 0), MyPoint(0, 100),  MyPoint(200, 0)}; // -300是边界
+    std::deque<MyPoint> goals = { MyPoint(200, 0), MyPoint(0, 100),  MyPoint(-200, 0)}; // -300是边界
     MyDataManager::instance()->setGoals(goals);
 
     std::thread* _thread1 = new std::thread([ = ] {pathPlanning();});
@@ -85,12 +86,15 @@ int main(int argc, char *argv[])
 
     // vel sending
     while(true){
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(30));
 
 //        USE_POTENTIAL = ApPlanner::instance()->plan(MyDataManager::instance()->goals.front());
 
         if(!USE_POTENTIAL || true){
             // change goals
+            if (PARAMS::DEBUG::kShowPathPlanner){
+                std::cout << "[main.cpp] use RRT" << std::endl;
+            }
             if(LocalPlanner::instance()->hasArrived(MyDataManager::instance()->goals.front())){
                 MyDataManager::instance()->goals.push_back(MyDataManager::instance()->goals.front());
                 MyDataManager::instance()->goals.pop_front();
@@ -109,9 +113,25 @@ int main(int argc, char *argv[])
     //        qDebug() << "vel: "<< LocalPlanner::instance()->velX << LocalPlanner::instance()->velW;
         }
         else{
-            serial.sendToReal(2, 70 * ApPlanner::instance()->v_x,
-                              70 * ApPlanner::instance()->v_y,
-                              -40 * ApPlanner::instance()->v_w);
+            if (PARAMS::DEBUG::kShowPathPlanner){
+                std::cout << "[main.cpp] use artifical potential" << std::endl;
+            }
+            if ( PARAMS::IS_SIMULATION ){
+                 CommandSender::instance()->sendToSim(PARAMS::our_id,
+                                                      ApPlanner::instance()->v_x / 1000,
+                                                      ApPlanner::instance()->v_y / 1000,
+                                                      ApPlanner::instance()->v_w);
+//                 CommandSender::instance()->sendToSim(PARAMS::our_id,
+//                                                      1,
+//                                                      1,
+//                                                      0);
+            }
+            else {
+                serial.sendToReal(2,
+                                  ApPlanner::instance()->v_x / 10,
+                                  ApPlanner::instance()->v_y / 10,
+                                  -40 * ApPlanner::instance()->v_w);
+            }
         }
     }
 
