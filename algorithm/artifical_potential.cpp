@@ -21,7 +21,8 @@ const float rou_0 = 50;  // a positive constant describing the influence range o
 }
 
 //void ArtificalPotential::plan( MyPoint target, MyVector v_target ){
-void ArtificalPotential::plan( MyPoint target ){
+bool ArtificalPotential::plan( MyPoint target ){
+    bool if_use_artifical_potential = false;
     std::cout << "\n==============  [artifical_potenial.cpp] debug  =========="
                     "=====" << std::endl;
 //    RobotInfo& me = MyDataManager::instance()->blueRobots[1];
@@ -94,6 +95,7 @@ void ArtificalPotential::plan( MyPoint target ){
                         / MAX_ACC / ( rou_s[i] - rou_m[i] ) /
                         ( rou_s[i] - rou_m[i] );
                 f_rep = f_rep + f_rep1[i] + f_rep2[i];
+                if_use_artifical_potential = true;
                 std::cout << "[ap.cpp] in else" << std::endl;
             }
             else{
@@ -139,4 +141,5 @@ void ArtificalPotential::plan( MyPoint target ){
 //    v_y = 1;
     std::cout << "\n=========================================================="
                     "=====" << std::endl;
+    return if_use_artifical_potential;
 }
