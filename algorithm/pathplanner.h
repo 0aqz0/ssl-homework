@@ -18,6 +18,7 @@ public:
     PathPlanner();
     void plan();
     bool hasArrived(MyPoint target);
+    bool moveToNext(MyPoint target);
     void rotateToPoint(MyPoint target);
     void goToPoint(MyPoint target);
     void stopMoving();

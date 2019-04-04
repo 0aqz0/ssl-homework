@@ -1,6 +1,7 @@
 #include "pathplanner.h"
 #include "communication/udpsender.h"
 #include "communication/serialsender.h"
+#include "obstacles.h"
 
 PathPlanner::PathPlanner()
 {
@@ -10,7 +11,7 @@ PathPlanner::PathPlanner()
 void PathPlanner::plan()
 {
     if(path.size() > 0){
-        while (hasArrived(path.front()))
+        while (moveToNext(path.front()))
         {
             qDebug() << "has arrived";
             path.pop_front();
@@ -24,6 +25,26 @@ bool PathPlanner::hasArrived(MyPoint target)
     return pow(MyDataManager::instance()->ourRobot().x - target.x(), 2)
             + pow(MyDataManager::instance()->ourRobot().y - target.y(), 2)
             <= pow(PARAMS::ACCEPT_RADIUS, 2);
+}
+
+// 判断机器人是否需要走下一个点
+bool PathPlanner::moveToNext(MyPoint target)
+{
+    bool next = false;
+    if(hasArrived(target))
+        next = true;
+    // 解决机器人走过头的问题
+    if(path.size() > 1){
+        MyPoint nextTarget = path[1];
+        RobotInfo& me = MyDataManager::instance()->ourRobot();
+        double distToTarget = sqrt(pow(me.x - target.x(),2) + pow(me.y - target.y(), 2))
+                + sqrt(pow(target.x() - nextTarget.x(),2) + pow(target.y() - nextTarget.y(),2));
+        double distToNextTarget = sqrt(pow(me.x - nextTarget.x(),2) + pow(me.x - nextTarget.x(),2));
+        if(distToTarget > distToNextTarget && !ObstaclesInfo::instance()->hasObstacle(me.x, me.y, nextTarget.x(), nextTarget.y(), CIRCLE))
+            next = true;
+//        qDebug() << "jump!!!";
+    }
+    return next;
 }
 
 void PathPlanner::rotateToPoint(MyPoint target)

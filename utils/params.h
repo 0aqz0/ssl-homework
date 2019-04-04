@@ -16,8 +16,8 @@ namespace PARAMS {
 
     // field
     namespace FIELD {
-        const int LENGTH = 1200;
-        const int WIDTH = 900;
+        const int LENGTH = 600;
+        const int WIDTH = 400;
     }
 
     // serial sender
