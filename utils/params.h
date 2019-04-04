@@ -4,7 +4,7 @@
 #include <QHostAddress>
 
 namespace PARAMS {
-    const bool IS_SIMULATION = false;
+    const bool IS_SIMULATION = true;
     const double ACCEPT_RADIUS = 10.0;
 
     // data manager

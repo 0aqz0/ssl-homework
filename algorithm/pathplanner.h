@@ -24,10 +24,10 @@ public:
     void updatePath(std::vector<Node> &nodePath);
     void updatePath(std::vector<MyPoint> &pointPath);
     void clearPath();
+    int pathSize(){ return path.size(); }
     double velX;
     double velY;
     double velW;
-private:
     std::deque<MyPoint> path;
 };
 typedef Singleton<PathPlanner> LocalPlanner;
