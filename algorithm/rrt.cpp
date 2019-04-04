@@ -49,6 +49,7 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
         tempPath.pop_back();
     }
     pathSmooth();
+//    qDebug() << "final path";
 //    for(int i=0; i<finalPath.size();i++){
 //        qDebug() << finalPath[i].x() << finalPath[i].y();
 //    }
@@ -102,4 +103,8 @@ void RRT::pathSmooth()
         smoothPath.push_back(finalPath[nextPoint]);
         nextPoint++;
     }
+//    qDebug() << "smooth path";
+//    for(int i=0; i<smoothPath.size();i++){
+//        qDebug() << smoothPath[i].x() << smoothPath[i].y();
+//    }
 }

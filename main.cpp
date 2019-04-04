@@ -19,15 +19,18 @@ bool updateRRT()
     if(LocalPlanner::instance()->pathSize() == 0)
         update = true;
     // meet obstacles
+    RobotInfo& me = MyDataManager::instance()->ourRobot();
     if(LocalPlanner::instance()->pathSize() != 0){
-        RobotInfo& me = MyDataManager::instance()->ourRobot();
         MyPoint target = LocalPlanner::instance()->path.front();
         if(ObstaclesInfo::instance()->hasObstacle(me.x, me.y, target.x(), target.y(), CIRCLE))
             update = true;
     }
     // 到了下一个点重新更新
 
-    // 可以直接到目标点
+    // can reach my goal directly
+    MyPoint goal = MyDataManager::instance()->goals.front();
+    if(!ObstaclesInfo::instance()->hasObstacle(me.x, me.y, goal.x(), goal.y(), CIRCLE))
+        update = true;
 
     return update;
 }

@@ -5,7 +5,7 @@
 
 namespace PARAMS {
     const bool IS_SIMULATION = true;
-    const double ACCEPT_RADIUS = 10.0;
+    const double ACCEPT_RADIUS = 25.0;
 
     // data manager
     const int ROBOT_NUM = 12;
