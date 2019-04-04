@@ -42,12 +42,12 @@ void pathPlanning()
     RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
     LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
     while(true){
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        if(updateRRT()){
+        std::this_thread::sleep_for(std::chrono::milliseconds(3000));
+//        if(updateRRT()){
             RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, MyDataManager::instance()->goals.front().x(), MyDataManager::instance()->goals.front().y());
             LocalPlanner::instance()->updatePath(RRTPlanner::instance()->smoothPath);
-    //        qDebug() << "path planning!!!";
-        }
+            qDebug() << "path planning!!!";
+//        }
     }
 }
 
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
     while(true){
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-        USE_POTENTIAL = ApPlanner::instance()->plan(MyDataManager::instance()->goals.front());
+//        USE_POTENTIAL = ApPlanner::instance()->plan(MyDataManager::instance()->goals.front());
 
         if(!USE_POTENTIAL || true){
             // change goals
@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
                 CommandSender::instance()->sendToSim(PARAMS::our_id, LocalPlanner::instance()->velX, LocalPlanner::instance()->velY, LocalPlanner::instance()->velW);
             else
     //            serial.sendToReal(2,100,0,0);
-                serial.sendToReal(2, 30*LocalPlanner::instance()->velX, 0, -40*LocalPlanner::instance()->velW);
+                serial.sendToReal(PARAMS::our_id, 30*LocalPlanner::instance()->velX, 0, -40*LocalPlanner::instance()->velW);
     //        qDebug() << "vel: "<< LocalPlanner::instance()->velX << LocalPlanner::instance()->velW;
         }
         else{
