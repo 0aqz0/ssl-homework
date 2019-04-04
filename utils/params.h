@@ -11,7 +11,7 @@ namespace PARAMS {
     const int ROBOT_NUM = 12;
 
     // our car
-    const int our_id = 5;  //从1开始
+    const int our_id = 0;  //从1开始
     const bool isBlue = true;
 
     // field
@@ -21,7 +21,7 @@ namespace PARAMS {
     }
 
     // serial sender
-    const QString serialPort = "COM17";
+    const QString serialPort = "COM6";
     const int frequency = 0;
     const int TRANSMIT_PACKET_SIZE = 25;
 
@@ -77,7 +77,7 @@ namespace PARAMS {
 
     namespace DEBUG {
         // switch for artifical potential message
-        const bool kAPDebugMessage = false;
+        const bool kAPDebugMessage = true;
     }
 }
 
