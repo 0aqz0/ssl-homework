@@ -11,17 +11,17 @@ namespace PARAMS {
     const int ROBOT_NUM = 12;
 
     // our car
-    const int our_id = 5;  //从1开始
+    const int our_id = 3;  //从1开始
     const bool isBlue = true;
 
     // field
     namespace FIELD {
-        const int LENGTH = 600;
-        const int WIDTH = 400;
+        const int LENGTH = 1200;
+        const int WIDTH = 900;
     }
 
     // serial sender
-    const QString serialPort = "COM6";
+    const QString serialPort = "COM7";
     const int frequency = 0;
     const int TRANSMIT_PACKET_SIZE = 25;
 
@@ -36,10 +36,8 @@ namespace PARAMS {
     const double ANGLE_THRESHOLD = 0.1;
     const double FORWARD_ANGLE_THRESHOLD = 0.3;
     const double ROTATE_COFF = 4;
-    const double FORWARD_SPEED = 3.0;
+    const double FORWARD_SPEED = 2.0;
     const double FORWARD_ROTATE_COFF = 3.0;
-    const double DV = 2.0;
-    const double FORWARD_SPEED_THRESHOLD = 3.0;
 
     //visualization module
     const QHostAddress visualAddress = QHostAddress("127.0.0.1");
@@ -47,8 +45,8 @@ namespace PARAMS {
 
     // RRT
     namespace RRT {
-        const int ITERATIONS = 1e4;
-        const int STEP_SIZE = 10;
+        const int ITERATIONS = 1e3;
+        const int STEP_SIZE = 20;
         const double EPSILON = 0.1;
     }
 
@@ -70,7 +68,7 @@ namespace PARAMS {
 
     // obstacle module
     namespace OBSTACLE {
-        const double INFLATION_RADIUS = 50.0;
+        const double INFLATION_RADIUS = 30.0;
         const double INFLATION_RADIUS_SQUARE = 900.0;
         const double STEP_SIZE = 10;
     }
@@ -79,6 +77,9 @@ namespace PARAMS {
         // switch for artifical potential message
         const bool kAPDebugMessage = false;
         const bool kShowPathPlanner = false;
+
+        const bool RRTDebug = true;
+        const bool pathPlannerDebug = true;
     }
 }
 

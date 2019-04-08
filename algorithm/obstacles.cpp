@@ -2,11 +2,6 @@
 #include "utils/params.h"
 #include "utils/datamanager.h"
 
-Obstacles::Obstacles()
-{
-
-}
-
 bool Obstacles::hasObstacle(double x, double y, inflationType type)
 {
     switch (type) {

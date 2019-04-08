@@ -21,11 +21,6 @@ RobotInfo& DataManager::ourRobot()
         return yellowRobots[PARAMS::IS_SIMULATION ? PARAMS::our_id : PARAMS::our_id-1];
 }
 
-void DataManager::setGoals(std::deque<MyPoint> new_goals)
-{
-    goals = new_goals;
-}
-
 void DataManager::updateCycle()
 {
     if(cycle < 4000000000)

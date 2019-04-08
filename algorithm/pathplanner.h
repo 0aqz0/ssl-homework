@@ -4,7 +4,6 @@
 #include "communication/udpsender.h"
 #include "communication/serialsender.h"
 #include "utils/datamanager.h"
-#include "utils/singleton.hpp"
 #include "utils/mymath.h"
 
 /**************************************************************/
@@ -15,10 +14,10 @@
 class PathPlanner
 {
 public:
-    PathPlanner();
+    PathPlanner() : velX(0), velY(0), velW(0){}
     void plan();
     bool hasArrived(MyPoint target);
-    bool moveToNext(MyPoint target);
+//    bool moveToNext(MyPoint target);
     void rotateToPoint(MyPoint target);
     void goToPoint(MyPoint target);
     void stopMoving();
@@ -31,6 +30,5 @@ public:
     double velW;
     std::deque<MyPoint> path;
 };
-typedef Singleton<PathPlanner> LocalPlanner;
 
 #endif // PATHPLANNER_H

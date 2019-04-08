@@ -37,10 +37,8 @@ public:
     RobotInfo yellowRobots[PARAMS::ROBOT_NUM];
     bool validBlueRobots[PARAMS::ROBOT_NUM];
     bool validYellowRobots[PARAMS::ROBOT_NUM];
-    std::deque<MyPoint> goals;
     unsigned long cycle;
     RobotInfo& ourRobot();
-    void setGoals(std::deque<MyPoint> new_goals);
     void updateCycle();
     void reset();
 };

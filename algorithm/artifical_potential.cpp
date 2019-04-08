@@ -66,15 +66,6 @@ bool ArtificalPotential::plan( MyPoint target ){
 //                  << std::endl;
     }
 
-    if ( (target - me_pos).mod() < 30 ){
-        MyDataManager::instance()->
-                goals.push_back(MyDataManager::instance()->goals.front());
-        MyDataManager::instance()->goals.pop_front();
-        std::cout << "Change Goal to "
-                  << MyDataManager::instance()->goals.front().x()
-                  << MyDataManager::instance()->goals.front().y()
-                  << std::endl;
-    }
     MyVector f_attractive =
             ( target - me_pos ) * m * alpha_p *
             pow( (target - me_pos).mod(), m - 2 )

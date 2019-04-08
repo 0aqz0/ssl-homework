@@ -3,49 +3,49 @@
 #include "communication/serialsender.h"
 #include "obstacles.h"
 
-PathPlanner::PathPlanner()
-{
-
-}
-
 void PathPlanner::plan()
 {
-    if(path.size() > 0){
-        while (moveToNext(path.front()))
-        {
+    while (path.size() > 0 && hasArrived(path.front()))
+    {
+        if(PARAMS::DEBUG::pathPlannerDebug)
             qDebug() << "has arrived";
-            path.pop_front();
-        }
-        goToPoint(path.front());
+        path.pop_front();
     }
+    if(PARAMS::DEBUG::pathPlannerDebug)
+        qDebug() << "path size:" << path.size();
+    if(path.size() > 0)
+        goToPoint(path.front());
 }
 
 bool PathPlanner::hasArrived(MyPoint target)
 {
+    if(PARAMS::DEBUG::pathPlannerDebug)
+        qDebug() << "has arrived";
+
     return pow(MyDataManager::instance()->ourRobot().x - target.x(), 2)
             + pow(MyDataManager::instance()->ourRobot().y - target.y(), 2)
             <= pow(PARAMS::ACCEPT_RADIUS, 2);
 }
 
-// 判断机器人是否需要走下一个点
-bool PathPlanner::moveToNext(MyPoint target)
-{
-    bool next = false;
-    if(hasArrived(target))
-        next = true;
-    // 解决机器人走过头的问题
-    if(path.size() > 1){
-        MyPoint nextTarget = path[1];
-        RobotInfo& me = MyDataManager::instance()->ourRobot();
-        double distToTarget = sqrt(pow(me.x - target.x(),2) + pow(me.y - target.y(), 2))
-                + sqrt(pow(target.x() - nextTarget.x(),2) + pow(target.y() - nextTarget.y(),2));
-        double distToNextTarget = sqrt(pow(me.x - nextTarget.x(),2) + pow(me.x - nextTarget.x(),2));
-        if(distToTarget > distToNextTarget && !ObstaclesInfo::instance()->hasObstacle(me.x, me.y, nextTarget.x(), nextTarget.y(), CIRCLE))
-            next = true;
-//        qDebug() << "jump!!!";
-    }
-    return next;
-}
+//// 判断机器人是否需要走下一个点
+//bool PathPlanner::moveToNext(MyPoint target)
+//{
+//    bool next = false;
+//    if(hasArrived(target))
+//        next = true;
+//    // 解决机器人走过头的问题
+//    if(path.size() > 1){
+//        MyPoint nextTarget = path[1];
+//        RobotInfo& me = MyDataManager::instance()->ourRobot();
+//        double distToTarget = sqrt(pow(me.x - target.x(),2) + pow(me.y - target.y(), 2))
+//                + sqrt(pow(target.x() - nextTarget.x(),2) + pow(target.y() - nextTarget.y(),2));
+//        double distToNextTarget = sqrt(pow(me.x - nextTarget.x(),2) + pow(me.x - nextTarget.x(),2));
+//        if(distToTarget > distToNextTarget && !ObstaclesInfo::instance()->hasObstacle(me.x, me.y, nextTarget.x(), nextTarget.y(), CIRCLE))
+//            next = true;
+////        qDebug() << "jump!!!";
+//    }
+//    return next;
+//}
 
 void PathPlanner::rotateToPoint(MyPoint target)
 {
@@ -77,6 +77,8 @@ void PathPlanner::rotateToPoint(MyPoint target)
 
 void PathPlanner::goToPoint(MyPoint target)
 {
+    if(PARAMS::DEBUG::pathPlannerDebug)
+        qDebug() << "go to point";
     RobotInfo& me = MyDataManager::instance()->ourRobot();
     double targetAngle = -atan2(target.y() - me.y, target.x() - me.x);
     double me_angle = MyDataManager::instance()->ourRobot().orientation;
@@ -98,15 +100,6 @@ void PathPlanner::goToPoint(MyPoint target)
         velW = rotVel;
     }
     else{
-//        if(fabs(me.vel_x-PARAMS::FORWARD_SPEED) <= PARAMS::FORWARD_SPEED_THRESHOLD)
-//        {
-//            velX = PARAMS::FORWARD_SPEED;
-//        }
-//        else
-//        {
-//            int flag = me.vel_x < PARAMS::FORWARD_SPEED ? 1 : -1;
-//            velX = me.vel_x + flag*PARAMS::DV;
-//        }
         velX = PARAMS::FORWARD_SPEED;
         velY = 0;
         velW = rotVel;
@@ -115,28 +108,20 @@ void PathPlanner::goToPoint(MyPoint target)
 
 void PathPlanner::stopMoving()
 {
-//    RobotInfo& me = MyDataManager::instance()->ourRobot();
-//    if(me.vel_x < PARAMS::FORWARD_SPEED_THRESHOLD) velX = 0;
-//    else velX = me.velx - PARAMS::DV;
     velX = 0;
     velY = 0;
     velW = 0;
 }
 
-void PathPlanner::updatePath(std::vector<Node> &nodePath)
-{
-    path.clear();
-    for(int i=0; i<nodePath.size(); i++){
-        path.push_back(MyPoint(nodePath[i].x, nodePath[i].y));
-    }
-}
-
 void PathPlanner::updatePath(std::vector<MyPoint> &pointPath)
 {
+    if(PARAMS::DEBUG::pathPlannerDebug)
+        qDebug() << "update path begin";
     path.clear();
-    for(int i=0; i<pointPath.size(); i++){
+    for(int i=0; i<pointPath.size(); i++)
         path.push_back(pointPath[i]);
-    }
+    if(PARAMS::DEBUG::pathPlannerDebug)
+        qDebug() << "update path finish";
 }
 
 void PathPlanner::clearPath()
