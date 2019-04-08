@@ -17,7 +17,7 @@ public:
     PathPlanner() : velX(0), velY(0), velW(0){}
     void plan();
     bool hasArrived(MyPoint target);
-//    bool moveToNext(MyPoint target);
+    bool moveToNext(MyPoint target);
     void rotateToPoint(MyPoint target);
     void goToPoint(MyPoint target);
     void stopMoving();

@@ -43,16 +43,6 @@ bool updateRRT()
 }
 
 
-void debugMsg(){
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    while(true){
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-//        VisualModule::instance()->drawTree(RRTPlanner::instance()->NodeList);
-        VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
-    }
-}
-
-
 int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
@@ -63,9 +53,6 @@ int main(int argc, char *argv[])
 //        serial.sendStartPacket();
         serial.openSerialPort();
     }
-
-    std::thread* _thread = new std::thread([ = ] {debugMsg();});
-    _thread->detach();
 
     // vel sending
     while(true){
@@ -91,6 +78,7 @@ int main(int argc, char *argv[])
             // 从1开始
             serial.sendToReal(PARAMS::our_id, 30*localPlanner.velX, 0, -40*localPlanner.velW);
 //        qDebug() << "vel: "<< LocalPlanner::instance()->velX << LocalPlanner::instance()->velW;
+        VisualModule::instance()->drawAll(goals);
     }
     return a.exec();
 }

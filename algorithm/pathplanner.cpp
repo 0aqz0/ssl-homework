@@ -5,7 +5,7 @@
 
 void PathPlanner::plan()
 {
-    while (path.size() > 0 && hasArrived(path.front()))
+    while (path.size() > 0 && moveToNext(path.front()))
     {
         if(PARAMS::DEBUG::pathPlannerDebug)
             qDebug() << "has arrived";
@@ -27,25 +27,24 @@ bool PathPlanner::hasArrived(MyPoint target)
             <= pow(PARAMS::ACCEPT_RADIUS, 2);
 }
 
-//// 判断机器人是否需要走下一个点
-//bool PathPlanner::moveToNext(MyPoint target)
-//{
-//    bool next = false;
-//    if(hasArrived(target))
-//        next = true;
-//    // 解决机器人走过头的问题
-//    if(path.size() > 1){
-//        MyPoint nextTarget = path[1];
-//        RobotInfo& me = MyDataManager::instance()->ourRobot();
-//        double distToTarget = sqrt(pow(me.x - target.x(),2) + pow(me.y - target.y(), 2))
-//                + sqrt(pow(target.x() - nextTarget.x(),2) + pow(target.y() - nextTarget.y(),2));
-//        double distToNextTarget = sqrt(pow(me.x - nextTarget.x(),2) + pow(me.x - nextTarget.x(),2));
-//        if(distToTarget > distToNextTarget && !ObstaclesInfo::instance()->hasObstacle(me.x, me.y, nextTarget.x(), nextTarget.y(), CIRCLE))
-//            next = true;
-////        qDebug() << "jump!!!";
-//    }
-//    return next;
-//}
+// 判断机器人是否需要走下一个点
+bool PathPlanner::moveToNext(MyPoint target)
+{
+    bool next = false;
+    if(hasArrived(target))
+        next = true;
+    // 解决机器人走过头的问题
+    if(path.size() > 1){
+        MyPoint nextTarget = path[1];
+        RobotInfo& me = MyDataManager::instance()->ourRobot();
+        double distToTarget = sqrt(pow(me.x - target.x(),2) + pow(me.y - target.y(), 2))
+                + sqrt(pow(target.x() - nextTarget.x(),2) + pow(target.y() - nextTarget.y(),2));
+        double distToNextTarget = sqrt(pow(me.x - nextTarget.x(),2) + pow(me.x - nextTarget.x(),2));
+        if(distToTarget > distToNextTarget && !ObstaclesInfo::instance()->hasObstacle(me.x, me.y, nextTarget.x(), nextTarget.y(), CIRCLE))
+            next = true;
+    }
+    return next;
+}
 
 void PathPlanner::rotateToPoint(MyPoint target)
 {
@@ -118,7 +117,8 @@ void PathPlanner::updatePath(std::vector<MyPoint> &pointPath)
     if(PARAMS::DEBUG::pathPlannerDebug)
         qDebug() << "update path begin";
     path.clear();
-    for(int i=0; i<pointPath.size(); i++)
+    //不要起点
+    for(int i=1; i<pointPath.size(); i++)
         path.push_back(pointPath[i]);
     if(PARAMS::DEBUG::pathPlannerDebug)
         qDebug() << "update path finish";

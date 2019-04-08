@@ -23,7 +23,7 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
         int newNode_y = NodeList[nearestNode].y + PARAMS::RRT::STEP_SIZE*sin(theta);
 
         if(PARAMS::DEBUG::RRTDebug)
-            qDebug() << "newNode: " << newNode_x << newNode_y;
+            qDebug() << "newNode: " << newNode_x << newNode_y << nearestNode;
 
         // outside the map
         if (newNode_x <= -PARAMS::FIELD::LENGTH/2 || newNode_y <= -PARAMS::FIELD::WIDTH/2 || newNode_x >= PARAMS::FIELD::LENGTH/2 || newNode_y >= PARAMS::FIELD::WIDTH/2)
@@ -46,6 +46,8 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
             while(currentNode>=0){
                 tempPath.push_back(MyPoint(NodeList[currentNode].x, NodeList[currentNode].y));
                 currentNode = NodeList[currentNode].parent;
+                if(PARAMS::DEBUG::RRTDebug)
+                    qDebug() <<"generate temp path";
             }
             if(PARAMS::DEBUG::RRTDebug)
                 qDebug() <<"finish temp path";
@@ -54,6 +56,8 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
             while(tempPath.size()){
                 finalPath.push_back(tempPath.back());
                 tempPath.pop_back();
+                if(PARAMS::DEBUG::RRTDebug)
+                    qDebug() <<"generate final path";
             }
             if(PARAMS::DEBUG::RRTDebug)
                 qDebug() <<"finish final path";
