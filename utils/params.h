@@ -71,6 +71,7 @@ namespace PARAMS {
         const double INFLATION_RADIUS = 35.0;
         const double INFLATION_RADIUS_SQUARE = 900.0;
         const double STEP_SIZE = 10;
+        const double REFRESH_TIME = 0.1;
     }
 
     namespace DEBUG {

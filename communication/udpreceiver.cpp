@@ -75,15 +75,15 @@ void UDPReceiver::readDatagrams(){
                 if (vision.robots_blue(i).has_vel_x())
                     MyDataManager::instance()->blueRobots[robot_id].vel_x = vision.robots_blue(i).vel_x();
                 else
-                    MyDataManager::instance()->blueRobots[robot_id].vel_x = 9999;
+                    MyDataManager::instance()->blueRobots[robot_id].vel_x = 0;
                 if (vision.robots_blue(i).has_vel_y())
                     MyDataManager::instance()->blueRobots[robot_id].vel_y = vision.robots_blue(i).vel_y();
                 else
-                    MyDataManager::instance()->blueRobots[robot_id].vel_y = 9999;
+                    MyDataManager::instance()->blueRobots[robot_id].vel_y = 0;
                 if (vision.robots_blue(i).has_rotate_vel())
                     MyDataManager::instance()->blueRobots[robot_id].rotate_vel = vision.robots_blue(i).rotate_vel();
                 else
-                    MyDataManager::instance()->blueRobots[robot_id].rotate_vel = 9999;
+                    MyDataManager::instance()->blueRobots[robot_id].rotate_vel = 0;
             }
 
             // Read yellow robot info
@@ -101,15 +101,15 @@ void UDPReceiver::readDatagrams(){
                 if (vision.robots_yellow(i).has_vel_x())
                     MyDataManager::instance()->yellowRobots[robot_id].vel_x = vision.robots_yellow(i).vel_x();
                 else
-                    MyDataManager::instance()->yellowRobots[robot_id].vel_x = 9999;
+                    MyDataManager::instance()->yellowRobots[robot_id].vel_x = 0;
                 if (vision.robots_yellow(i).has_vel_y())
                     MyDataManager::instance()->yellowRobots[robot_id].vel_y = vision.robots_yellow(i).vel_y();
                 else
-                    MyDataManager::instance()->yellowRobots[robot_id].vel_y = 9999;
+                    MyDataManager::instance()->yellowRobots[robot_id].vel_y = 0;
                 if (vision.robots_yellow(i).has_rotate_vel())
                     MyDataManager::instance()->yellowRobots[robot_id].rotate_vel = vision.robots_yellow(i).rotate_vel();
                 else
-                    MyDataManager::instance()->yellowRobots[robot_id].rotate_vel = 9999;
+                    MyDataManager::instance()->yellowRobots[robot_id].rotate_vel = 0;
             }
 
             // Update cycle
