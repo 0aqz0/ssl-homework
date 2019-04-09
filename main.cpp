@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
             CommandSender::instance()->sendToSim(PARAMS::our_id, localPlanner.velX, localPlanner.velY, localPlanner.velW);
         else
             // 从1开始
-            serial.sendToReal(PARAMS::our_id, 30*localPlanner.velX, 0, -40*localPlanner.velW);
+            serial.sendToReal(PARAMS::our_id, 30*localPlanner.velX, 30*localPlanner.velY, -40*localPlanner.velW);
 //        qDebug() << "vel: "<< LocalPlanner::instance()->velX << LocalPlanner::instance()->velW;
         VisualModule::instance()->drawAll(goals);
     }

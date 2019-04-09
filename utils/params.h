@@ -21,7 +21,7 @@ namespace PARAMS {
     }
 
     // serial sender
-    const QString serialPort = "COM7";
+    const QString serialPort = "COM6";
     const int frequency = 0;
     const int TRANSMIT_PACKET_SIZE = 25;
 

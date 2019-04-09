@@ -14,7 +14,8 @@ void PathPlanner::plan()
     if(PARAMS::DEBUG::pathPlannerDebug)
         qDebug() << "path size:" << path.size();
     if(path.size() > 0)
-        goToPoint(path.front());
+//        goToPoint(path.front());
+        goToPointTrapezoid(path.front());
 }
 
 bool PathPlanner::hasArrived(MyPoint target)
@@ -103,6 +104,35 @@ void PathPlanner::goToPoint(MyPoint target)
         velY = 0;
         velW = rotVel;
     }
+}
+
+void PathPlanner::goToPointTrapezoid(MyPoint target)
+{
+    //尤其注意，本函数得出的velx和vely和实际场地是相同的，不需要乘-1，可以乘倍数
+    RobotInfo& me = MyDataManager::instance()->ourRobot();
+    double targetAngle = atan2(target.y() - me.y, target.x() - me.x);
+    double globalvx = PARAMS::FORWARD_SPEED * cos(targetAngle);
+    double globalvy = PARAMS::FORWARD_SPEED * sin(targetAngle);
+    double localvx = globalvx * cos(me.orientation) - globalvy * sin(me.orientation);
+    double localvy = globalvx * sin(me.orientation) + globalvy * cos(me.orientation);
+
+
+//    float dis = sqrt(pow(target.x()-me.x,2)+pow(target.y()-me.y,2));
+//    float vel_now = sqrt(pow(me.vel_x,2)+pow(me.vel_y,2));
+//    float dismax = vel_now/PARAMS::multiple_realToCommand*15;
+//    qDebug() << "dis" << dis << "dismax" << dismax;
+//    if(dis < dismax && false)
+//    {
+//        //it's good in reality, but not in simulink.
+//        velX = fmax(localvx,2.0);
+//        velY = fmax(localvy,2.0);
+//    }
+//    else{
+        velX = localvx;
+        velY = localvy;
+//    }
+    velW = 0;
+    qDebug() << "now goToPoint-------------ing";
 }
 
 void PathPlanner::stopMoving()
