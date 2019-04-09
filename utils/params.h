@@ -16,8 +16,8 @@ namespace PARAMS {
 
     // field
     namespace FIELD {
-        const int LENGTH = 1200;
-        const int WIDTH = 900;
+        const int LENGTH = 580;
+        const int WIDTH = 380;
     }
 
     // serial sender
@@ -68,18 +68,19 @@ namespace PARAMS {
 
     // obstacle module
     namespace OBSTACLE {
-        const double INFLATION_RADIUS = 30.0;
+        const double INFLATION_RADIUS = 35.0;
         const double INFLATION_RADIUS_SQUARE = 900.0;
         const double STEP_SIZE = 10;
     }
 
     namespace DEBUG {
         // switch for artifical potential message
-        const bool kAPDebugMessage = false;
+        const bool kAPDebugMessage  = false;
+        const bool kMainDebug       = true;
         const bool kShowPathPlanner = false;
 
         const bool RRTDebug = false;
-        const bool pathPlannerDebug = true;
+        const bool pathPlannerDebug = false;
     }
 }
 

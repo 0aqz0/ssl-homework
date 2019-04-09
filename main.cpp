@@ -17,7 +17,7 @@ serialSender serial;
 PathPlanner localPlanner;
 
 // set Goals
-std::deque<MyPoint> goals = { MyPoint(200, 0), MyPoint(0, 100),  MyPoint(-200, 0)}; // -300是边界
+std::deque<MyPoint> goals = { MyPoint(200, 150), MyPoint(-200, -150)}; // -300是边界
 
 bool updateRRT()
 {
@@ -57,27 +57,48 @@ int main(int argc, char *argv[])
     // vel sending
     while(true){
         std::this_thread::sleep_for(std::chrono::milliseconds(30));
-        // update RRT
-        if(updateRRT()){
-            qDebug() << "path planning!";
-            RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, goals.front().x(), goals.front().y());
-            localPlanner.updatePath(RRTPlanner::instance()->smoothPath);
+        bool if_use_artifical = ApPlanner::instance()->plan(goals.front());
+        if (PARAMS::DEBUG::kMainDebug){
+            if (if_use_artifical)
+                std::cout << "[main.cpp] " << if_use_artifical << std::endl;
         }
-        // change goals
-        if(localPlanner.hasArrived(goals.front())){
-            goals.push_back(goals.front());
-            goals.pop_front();
-            localPlanner.stopMoving();
-            localPlanner.clearPath();
-            qDebug() << "Change Goal to " << goals.front().x() << goals.front().y();
+        if ( !if_use_artifical ){
+            // update RRT
+            if(updateRRT()){
+//                qDebug() << "path planning!";
+                RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, goals.front().x(), goals.front().y());
+                localPlanner.updatePath(RRTPlanner::instance()->smoothPath);
+            }
+            // change goals
+            if(localPlanner.hasArrived(goals.front())){
+                goals.push_back(goals.front());
+                goals.pop_front();
+                localPlanner.stopMoving();
+                localPlanner.clearPath();
+                qDebug() << "Change Goal to " << goals.front().x() << goals.front().y();
+            }
+            localPlanner.plan();
+            if(PARAMS::IS_SIMULATION)
+                CommandSender::instance()->sendToSim(PARAMS::our_id, localPlanner.velX, localPlanner.velY, localPlanner.velW);
+            else
+                // 从1开始
+                serial.sendToReal(PARAMS::our_id, 100*localPlanner.velX, 100*localPlanner.velY, -40*localPlanner.velW);
+            //        qDebug() << "vel: "<< LocalPlanner::instance()->velX << LocalPlanner::instance()->velW;
         }
-        localPlanner.plan();
-        if(PARAMS::IS_SIMULATION)
-            CommandSender::instance()->sendToSim(PARAMS::our_id, localPlanner.velX, localPlanner.velY, localPlanner.velW);
-        else
-            // 从1开始
-            serial.sendToReal(PARAMS::our_id, 100*localPlanner.velX, 100*localPlanner.velY, -40*localPlanner.velW);
-//        qDebug() << "vel: "<< LocalPlanner::instance()->velX << LocalPlanner::instance()->velW;
+        else {
+            if(PARAMS::IS_SIMULATION){
+                 CommandSender::instance()->sendToSim(PARAMS::our_id,
+                                                      ApPlanner::instance()->v_x / 1000,
+                                                      ApPlanner::instance()->v_y / 1000,
+                                                      ApPlanner::instance()->v_w);
+            }
+            else{
+                serial.sendToReal(PARAMS::our_id,
+                                  ApPlanner::instance()->v_x / 10,
+                                  ApPlanner::instance()->v_y / 10,
+                                  ApPlanner::instance()->v_w);
+            }
+        }
         VisualModule::instance()->drawAll(goals);
     }
     return a.exec();

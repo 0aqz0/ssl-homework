@@ -27,6 +27,7 @@ const float m_attractive = 12;
 const float m_repulsive = 0.00005;
 const float MAX_ACC = 1000;
 const float MAX_SPEED = 1500;
+const float RATE = 0;
 const float eta = 7500.0;  // positive constant
 const float rou_0 = 110;  // a positive constant describing the influence range of
                         // the obstacle
@@ -97,11 +98,11 @@ bool ArtificalPotential::plan( MyPoint target ){
             rou_m[i] = v_ro.mod() * v_ro.mod() / 2 / MAX_ACC;
 
             if ( PARAMS::DEBUG::kAPDebugMessage ) {
-                std::cout << "rou_s[i] - rou_m[i]           : "
-                          << std::right << std::setw(12)
-                          << rou_s[i] - rou_m[i]
-                          << "\n"
-                          << std::endl;
+//                std::cout << "rou_s[i] - rou_m[i]           : "
+//                          << std::right << std::setw(12)
+//                          << rou_s[i] - rou_m[i]
+//                          << "\n"
+//                          << std::endl;
 //                std::cout << "( me_vel - yellow_vel ) * n_ro: "
 //                          << std::right << std::setw(12)
 //                          << ( me_vel - yellow_vel ) * n_ro
@@ -134,8 +135,14 @@ bool ArtificalPotential::plan( MyPoint target ){
                         / MAX_ACC / ( rou_s[i] - rou_m[i] ) /
                         ( rou_s[i] - rou_m[i] );
                 f_rep = f_rep + f_rep1[i] + f_rep2[i];
-                if ( yellow_vel.mod() > 10 )
+                if ( yellow_vel.mod() > 300 ){
                     if_use_artifical_potential = true;
+                    if (PARAMS::DEBUG::kAPDebugMessage){
+                        std::cout << "[artifical_potential.cpp]"
+                                  << "\nyellow_vel.mod: " << yellow_vel.mod()
+                                  << std::endl;
+                    }
+                }
             }
             else{
                 if ( PARAMS::DEBUG::kAPDebugMessage ){
@@ -166,11 +173,11 @@ bool ArtificalPotential::plan( MyPoint target ){
             rou_m[i] = v_ro.mod() * v_ro.mod() / 2 / MAX_ACC;
 
             if ( PARAMS::DEBUG::kAPDebugMessage ) {
-                std::cout << "rou_s[i] - rou_m[i]           : "
-                          << std::right << std::setw(12)
-                          << rou_s[i] - rou_m[i]
-                          << "\n"
-                          << std::endl;
+//                std::cout << "rou_s[i] - rou_m[i]           : "
+//                          << std::right << std::setw(12)
+//                          << rou_s[i] - rou_m[i]
+//                          << "\n"
+//                          << std::endl;
 //                std::cout << "( me_vel - blue_vel ) * n_ro  : "
 //                          << std::right << std::setw(12)
 //                          << ( me_vel - blue_vel ) * n_ro
@@ -202,8 +209,14 @@ bool ArtificalPotential::plan( MyPoint target ){
                         / MAX_ACC / ( rou_s[i] - rou_m[i] ) /
                         ( rou_s[i] - rou_m[i] );
                 f_rep = f_rep + f_rep1[i] + f_rep2[i];
-                if ( blue_vel.mod() > 10 )
+                if ( blue_vel.mod() > 300 ){
                     if_use_artifical_potential = true;
+                    if (PARAMS::DEBUG::kAPDebugMessage){
+                        std::cout << "[artifical_potential.cpp]"
+                                  << "\nblue_vel.mod: " << blue_vel.mod()
+                                  << std::endl;
+                    }
+                }
             }
             else{
                 if ( PARAMS::DEBUG::kAPDebugMessage ){
@@ -218,7 +231,7 @@ bool ArtificalPotential::plan( MyPoint target ){
 
 //    MyVector acc_tol = acc_attractive + acc_repulsive;
     MyVector acc_tol;
-    if ( me_vel.mod() > MAX_SPEED * 0.5 ){
+    if ( me_vel.mod() > MAX_SPEED * RATE ){
         acc_tol = acc_repulsive;
     }
     else{
@@ -247,20 +260,20 @@ bool ArtificalPotential::plan( MyPoint target ){
     }
 
     if ( PARAMS::DEBUG::kAPDebugMessage ) {
-        std::cout << "[ap.cpp] \nacc_attractive_x: " << std::right << std::setw(12) << acc_attractive.x()
-                  << ", acc_attractive_y: " << std::right << std::setw(12) << acc_attractive.y()
-                  << "\nacc_repulsive_x : " << std::right << std::setw(12) << acc_repulsive.x()
-                  << ", acc_repulsive_y : " << std::right << std::setw(12) << acc_repulsive.y()
-                  << "\nacc_tol_x       : " << std::right << std::setw(12) << acc_tol.x()
-                  << ", acc_tol_y       : " << std::right << std::setw(12) <<  acc_tol.y()
-                  << "\nme_vel_x        : " << std::right << std::setw(12) << me.vel_x
-                  << ", me_vel_y        : " << std::right << std::setw(12) << me.vel_y
-                  << "\nnext_step_vel_x : " << std::right << std::setw(12) << next_step_vel.x()
-                  << ", next_step_vel_y : " << std::right << std::setw(12) << next_step_vel.y()
-                  << "\nv_x             : " << std::right << std::setw(12) << v_x
-                  << ", v_y             : " << std::right << std::setw(12) << v_y
-                  << "\ndir             : " << std::right << std::setw(12) << dir
-                  << std::endl;
+//        std::cout << "[ap.cpp] \nacc_attractive_x: " << std::right << std::setw(12) << acc_attractive.x()
+//                  << ", acc_attractive_y: " << std::right << std::setw(12) << acc_attractive.y()
+//                  << "\nacc_repulsive_x : " << std::right << std::setw(12) << acc_repulsive.x()
+//                  << ", acc_repulsive_y : " << std::right << std::setw(12) << acc_repulsive.y()
+//                  << "\nacc_tol_x       : " << std::right << std::setw(12) << acc_tol.x()
+//                  << ", acc_tol_y       : " << std::right << std::setw(12) <<  acc_tol.y()
+//                  << "\nme_vel_x        : " << std::right << std::setw(12) << me.vel_x
+//                  << ", me_vel_y        : " << std::right << std::setw(12) << me.vel_y
+//                  << "\nnext_step_vel_x : " << std::right << std::setw(12) << next_step_vel.x()
+//                  << ", next_step_vel_y : " << std::right << std::setw(12) << next_step_vel.y()
+//                  << "\nv_x             : " << std::right << std::setw(12) << v_x
+//                  << ", v_y             : " << std::right << std::setw(12) << v_y
+//                  << "\ndir             : " << std::right << std::setw(12) << dir
+//                  << std::endl;
         std::cout << "\n=========================================================="
                         "=====" << std::endl;
     }

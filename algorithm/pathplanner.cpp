@@ -132,7 +132,7 @@ void PathPlanner::goToPointTrapezoid(MyPoint target)
         velY = localvy;
 //    }
     velW = 0;
-    qDebug() << "now goToPoint-------------ing";
+//    qDebug() << "now goToPoint-------------ing";
 }
 
 void PathPlanner::stopMoving()
