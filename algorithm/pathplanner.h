@@ -21,6 +21,8 @@ public:
     void rotateToPoint(MyPoint target);
     void goToPoint(MyPoint target);
     void goToPointTrapezoid(MyPoint target);
+    void goToPosition1d( MyPoint target );
+    void goToPosition2d( MyPoint target );
     void stopMoving();
     void updatePath(std::vector<Node> &nodePath);
     void updatePath(std::vector<MyPoint> &pointPath);

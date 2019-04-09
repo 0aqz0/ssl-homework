@@ -8,13 +8,13 @@ bool Obstacles::hasObstacle(double x, double y, inflationType type)
     case CIRCLE:
         for(int i=0; i<PARAMS::ROBOT_NUM; i++){
             // blue robot
-            if(MyDataManager::instance()->validBlueRobots[i] && !((PARAMS::IS_SIMULATION ? i==(PARAMS::our_id) : i==(PARAMS::our_id-1)) && PARAMS::isBlue)){
+            if(MyDataManager::instance()->validBlueRobots[i] && !((PARAMS::IS_SIMULATION ? i==(PARAMS::our_id-1) : i==(PARAMS::our_id-1)) && PARAMS::isBlue)){
                 RobotInfo& blue = MyDataManager::instance()->blueRobots[i];
                 if(pow(blue.x - x, 2) + pow(blue.y - y, 2) <= PARAMS::OBSTACLE::INFLATION_RADIUS_SQUARE)
                     return true;
             }
             // yellow robot
-            if(MyDataManager::instance()->validYellowRobots[i] && !((PARAMS::IS_SIMULATION ? i==(PARAMS::our_id) : i==(PARAMS::our_id-1)) && !PARAMS::isBlue)){
+            if(MyDataManager::instance()->validYellowRobots[i] && !((PARAMS::IS_SIMULATION ? i==(PARAMS::our_id-1) : i==(PARAMS::our_id-1)) && !PARAMS::isBlue)){
                 RobotInfo& yellow = MyDataManager::instance()->yellowRobots[i];
                 if(pow(yellow.x - x, 2) + pow(yellow.y - y, 2) <= PARAMS::OBSTACLE::INFLATION_RADIUS_SQUARE)
                     return true;

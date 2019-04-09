@@ -18,9 +18,12 @@ void UDPSender::sendToSim(int robot_id, double vel_x, double vel_y, double vel_w
     grSim_Packet packet;
     auto* command = packet.mutable_commands();
     command->set_timestamp(0);
-    command->set_isteamyellow(false);
+    if(PARAMS::isBlue)
+        command->set_isteamyellow(false);
+    else
+        command->set_isteamyellow(true);
     auto* robot_command = command->add_robot_commands();
-    robot_command->set_id(robot_id);
+    robot_command->set_id(robot_id-1);
     robot_command->set_kickspeedx(0);
     robot_command->set_kickspeedz(0);
     robot_command->set_veltangent(vel_x);

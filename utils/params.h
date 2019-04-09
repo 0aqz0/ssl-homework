@@ -4,15 +4,15 @@
 #include <QHostAddress>
 
 namespace PARAMS {
-    const bool IS_SIMULATION = false;
+    const bool IS_SIMULATION = true;
     const double ACCEPT_RADIUS = 25.0;
 
     // data manager
     const int ROBOT_NUM = 12;
 
     // our car
-    const int our_id = 5;  //从1开始
-    const bool isBlue = true;
+    const int our_id = 1;  //从1开始
+    const bool isBlue = false;
 
     // field
     namespace FIELD {
@@ -26,7 +26,7 @@ namespace PARAMS {
     const int TRANSMIT_PACKET_SIZE = 25;
 
     // UDP receiver
-    const int visionPort = 23333;
+    const int visionPort = 23334;
 
     // UDP sender
     const int simPort = 20011;
@@ -41,12 +41,12 @@ namespace PARAMS {
 
     //visualization module
     const QHostAddress visualAddress = QHostAddress("127.0.0.1");
-    const int visualPort = 20001;
+    const int visualPort = 20002;
 
     // RRT
     namespace RRT {
         const int ITERATIONS = 1e3;
-        const int STEP_SIZE = 20;
+        const int STEP_SIZE = 5;
         const double EPSILON = 0.1;
     }
 
@@ -69,7 +69,7 @@ namespace PARAMS {
     // obstacle module
     namespace OBSTACLE {
         const double INFLATION_RADIUS = 35.0;
-        const double INFLATION_RADIUS_SQUARE = 900.0;
+        const double INFLATION_RADIUS_SQUARE = 900;
         const double STEP_SIZE = 10;
         const double REFRESH_TIME = 0.1;
     }

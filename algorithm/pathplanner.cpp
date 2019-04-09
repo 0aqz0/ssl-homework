@@ -135,6 +135,14 @@ void PathPlanner::goToPointTrapezoid(MyPoint target)
 //    qDebug() << "now goToPoint-------------ing";
 }
 
+void PathPlanner::goToPosition2d( MyPoint target ){
+
+}
+
+void PathPlanner::goToPosition1d( MyPoint target ){
+
+}
+
 void PathPlanner::stopMoving()
 {
     velX = 0;

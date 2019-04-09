@@ -16,9 +16,9 @@ void DataManager::reset()
 RobotInfo& DataManager::ourRobot()
 {
     if (PARAMS::isBlue)
-        return blueRobots[PARAMS::IS_SIMULATION ? PARAMS::our_id : PARAMS::our_id-1];
+        return blueRobots[PARAMS::IS_SIMULATION ? PARAMS::our_id-1 : PARAMS::our_id-1];
     else
-        return yellowRobots[PARAMS::IS_SIMULATION ? PARAMS::our_id : PARAMS::our_id-1];
+        return yellowRobots[PARAMS::IS_SIMULATION ? PARAMS::our_id-1 : PARAMS::our_id-1];
 }
 
 void DataManager::updateCycle()

@@ -17,7 +17,7 @@ serialSender serial;
 PathPlanner localPlanner;
 
 // set Goals
-std::deque<MyPoint> goals = { MyPoint(200, 150), MyPoint(-200, -150)}; // -300是边界
+std::deque<MyPoint> goals = { MyPoint(250, 150), MyPoint(-250, -150)}; // -300是边界
 
 bool updateRRT()
 {
@@ -62,10 +62,10 @@ int main(int argc, char *argv[])
             if (if_use_artifical)
                 std::cout << "[main.cpp] " << if_use_artifical << std::endl;
         }
-        if ( !if_use_artifical ){
+        if ( !if_use_artifical  || true ){
             // update RRT
             if(updateRRT()){
-//                qDebug() << "path planning!";
+                qDebug() << "path planning!";
                 RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, goals.front().x(), goals.front().y());
                 localPlanner.updatePath(RRTPlanner::instance()->smoothPath);
             }
@@ -79,11 +79,12 @@ int main(int argc, char *argv[])
             }
             localPlanner.plan();
             if(PARAMS::IS_SIMULATION)
-                CommandSender::instance()->sendToSim(PARAMS::our_id, localPlanner.velX, localPlanner.velY, localPlanner.velW);
+                CommandSender::instance()->sendToSim(PARAMS::our_id, localPlanner.velX, -localPlanner.velY, localPlanner.velW);
             else
                 // 从1开始
                 serial.sendToReal(PARAMS::our_id, 100*localPlanner.velX, 100*localPlanner.velY, -40*localPlanner.velW);
-            //        qDebug() << "vel: "<< LocalPlanner::instance()->velX << LocalPlanner::instance()->velW;
+                // qDebug() << "vel: "<< localPlanner.velX << localPlanner.velY << localPlanner.velW;
+                // qDebug() << MyDataManager::instance()->ourRobot().x << MyDataManager::instance()->ourRobot().y;
         }
         else {
             if(PARAMS::IS_SIMULATION){
