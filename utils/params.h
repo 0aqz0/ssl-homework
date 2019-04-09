@@ -11,7 +11,7 @@ namespace PARAMS {
     const int ROBOT_NUM = 12;
 
     // our car
-    const int our_id = 3;  //从1开始
+    const int our_id = 5;  //从1开始
     const bool isBlue = true;
 
     // field
@@ -36,7 +36,7 @@ namespace PARAMS {
     const double ANGLE_THRESHOLD = 0.1;
     const double FORWARD_ANGLE_THRESHOLD = 0.5;
     const double ROTATE_COFF = 4;
-    const double FORWARD_SPEED = 3.0;
+    const double FORWARD_SPEED = 2.0;
     const double FORWARD_ROTATE_COFF = 3.0;
 
     //visualization module
