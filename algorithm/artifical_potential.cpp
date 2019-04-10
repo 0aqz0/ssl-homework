@@ -30,7 +30,7 @@ const float m_repulsive = 0.00005;
 const float MAX_ACC = 3500;
 const float MAX_SPEED = 5500;
 const float ACC_BUFFER = 2;
-const float RATE = 0.2;
+const float RATE = 0.5;
 const float REP_RATE = 0.8;
 //const float eta = 7500.0;  // positive constant
 //const float rou_0 = 110;  // a positive constant describing the influence range of
@@ -111,7 +111,7 @@ bool ArtificalPotential::plan( MyPoint target ){
                     rou_s[i] - rou_m[i] > 0 &&
                     ( me_vel - yellow_vel ) * n_ro > 0;
             else
-                if_rep = rou_s[i] - rou_m[i] < rou_0 * REP_RATE &&
+                if_rep = rou_s[i] - rou_m[i] < rou_0 / REP_RATE &&
                         rou_s[i] - rou_m[i] > 0 &&
                         ( me_vel - yellow_vel ) * n_ro > 0;
             last_statue = false;

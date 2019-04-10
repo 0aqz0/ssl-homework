@@ -17,7 +17,7 @@ serialSender serial;
 PathPlanner localPlanner;
 
 // set Goals
-std::deque<MyPoint> goals = { MyPoint(-250, -150), MyPoint(250, 150)}; // -300是边界
+std::deque<MyPoint> goals = { MyPoint(250, -150), MyPoint(-250, 150)}; // -300是边界
 
 bool updateRRT()
 {
@@ -81,7 +81,8 @@ int main(int argc, char *argv[])
                 CommandSender::instance()->sendToSim(PARAMS::our_id, localPlanner.velX, -localPlanner.velY, localPlanner.velW);
             else
                 // 从1开始
-                serial.sendToReal(PARAMS::our_id, 100*localPlanner.velX, 100*localPlanner.velY, -40*localPlanner.velW);
+//                serial.sendToReal(PARAMS::our_id, 180 * localPlanner.velX, 180 * localPlanner.velY, -40*localPlanner.velW);
+                serial.sendToReal(PARAMS::our_id, 140 * localPlanner.velX, 200 * localPlanner.velY, 0);
                 // qDebug() << "vel: "<< localPlanner.velX << localPlanner.velY << localPlanner.velW;
                 // qDebug() << MyDataManager::instance()->ourRobot().x << MyDataManager::instance()->ourRobot().y;
         }

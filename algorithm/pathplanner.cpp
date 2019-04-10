@@ -8,8 +8,10 @@
 namespace {
 const float DIRECTION_ACCURACY = 2 / 180 * PARAMS::MATH::PI;
 const float DELTA_TIME = 0.03; // unit is second
-const float ACC_BUFFER = 2;
-const float STOP_BUFFER = 300;
+const float ACC_BUFFER = 1.2;
+const float STOP_BUFFER_UP = 320;
+const float STOP_BUFFER_DOWN = 0;
+const float ROTATE = 5;
 }
 
 void PathPlanner::plan()
@@ -158,9 +160,22 @@ void PathPlanner::goToPosition2d( MyPoint target ){
     MyVector me_vel( me.vel_x, me.vel_y );
     MyVector next_step;
 
-    float angular_bias = fabs( me_vel.dir() - me2target.dir() );
+    double targetAngle = -atan2(target.y() - me.y, target.x() - me.x);
+    double me_angle = MyDataManager::instance()->ourRobot().orientation;
 
-    if ( me_vel.mod() < 30 ){
+    double diffAngle = fabs(me_angle - targetAngle);
+    diffAngle = diffAngle > PARAMS::MATH::PI ? 2*PARAMS::MATH::PI - diffAngle : diffAngle;
+    // 计算旋转速度的绝对值
+    double rotVel = diffAngle * PARAMS::ROTATE_COFF; // need improve!!!
+    // 计算旋转速度的方向
+    if(me_angle > targetAngle)
+        rotVel *= -1;
+    if(fabs(me_angle - targetAngle) > PARAMS::MATH::PI)
+        rotVel *= -1;
+
+    velW = rotVel;
+
+    if ( me_vel.mod() < 300 ){
         // our robot stop
         next_step =  me_vel + me2target.Unitization() * PARAMS::FORWARD_ACC *
                 1000 * DELTA_TIME;
@@ -188,12 +203,13 @@ void PathPlanner::goToPosition2d( MyPoint target ){
 //    }
     velX = next_step.x() * cos(me.orientation) - next_step.y() * sin(me.orientation);
     velY = next_step.x() * sin(me.orientation) + next_step.y() * cos(me.orientation);
+//    velX = next_step.x() * cos(me.orientation) + next_step.y() * sin(me.orientation);
+//    velY = next_step.x() * sin(me.orientation) - next_step.y() * cos(me.orientation);
     velX = velX / 1000;
     velY = velY / 1000;
-    velW = 0;
     if ( PARAMS::DEBUG::kgoToPosition2d ){
-        std::cout << "next_step : " << std::right << std::setw(12) << next_step.x()
-                  << ", next_step: " << std::right << std::setw(12) << next_step.y()
+        std::cout /*<< "next_step : " << std::right << std::setw(12) << next_step.x()
+                  << ", next_step: " << std::right << std::setw(12) << next_step.y()*/
                   << "\nme_vel_x : " << std::right << std::setw(12) << me_vel.x()
                   << ", me_vel_y : " << std::right << std::setw(12) << me_vel.y()
                   << std::endl;
@@ -208,15 +224,23 @@ float PathPlanner::goToPosition1d( float me2target_dis, float me_vel){
     float stop_dis = me_vel * me_vel / 2 / a_max;
 
     if ( PARAMS::DEBUG::kgoToPosition2d ){
-        std::cout << "stop_dis : " << std::right << std::setw(12) << stop_dis / ACC_BUFFER
-                  << ", me2target_dis: " << std::right << std::setw(12) << me2target_dis
-                  << "\nBUFFER: " << ACC_BUFFER << std::endl;
+//        std::cout << "stop_dis : " << std::right << std::setw(12) << stop_dis / ACC_BUFFER
+//                  << ", me2target_dis: " << std::right << std::setw(12) << me2target_dis
+//                  << "\nBUFFER: " << ACC_BUFFER << std::endl;
+    }
+    float STOP_BUFFER;
+    if ( me_vel > 1500 ){
+        STOP_BUFFER = STOP_BUFFER_UP;
+    }
+    else {
+//        std::cout << "[pathplanner.cpp] test" << std::endl;
+        STOP_BUFFER = STOP_BUFFER_DOWN;
     }
     if ( me2target_dis <= stop_dis + STOP_BUFFER ){
         return me_vel - a_max * DELTA_TIME * ACC_BUFFER;
     }
     else if ( (v_max - me_vel) > a_max * DELTA_TIME ) {
-        return me_vel + a_max * DELTA_TIME * ACC_BUFFER;
+        return me_vel + a_max * DELTA_TIME;
     }
     else {
         return v_max;

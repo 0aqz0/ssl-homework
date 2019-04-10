@@ -4,14 +4,14 @@
 #include <QHostAddress>
 
 namespace PARAMS {
-    const bool IS_SIMULATION = true;
+    const bool IS_SIMULATION = false;
     const double ACCEPT_RADIUS = 20.0;
 
     // data manager
     const int ROBOT_NUM = 12;
 
     // our car
-    const int our_id = 1;  //从1开始
+    const int our_id = 4;  //从1开始
     const bool isBlue = false;
 
     // field
@@ -26,7 +26,7 @@ namespace PARAMS {
     const int TRANSMIT_PACKET_SIZE = 25;
 
     // UDP receiver
-    const int visionPort = 23334;
+    const int visionPort = 23333;
 
     // UDP sender
     const int simPort = 20011;
@@ -37,12 +37,12 @@ namespace PARAMS {
     const double FORWARD_ANGLE_THRESHOLD = 0.5;
     const double ROTATE_COFF = 4;
     const double FORWARD_SPEED = 3.5;
-    const double FORWARD_ACC = 5.5;
+    const double FORWARD_ACC = 4;
     const double FORWARD_ROTATE_COFF = 3.0;
 
     //visualization module
     const QHostAddress visualAddress = QHostAddress("127.0.0.1");
-    const int visualPort = 20002;
+    const int visualPort = 20001;
 
     // RRT
     namespace RRT {
