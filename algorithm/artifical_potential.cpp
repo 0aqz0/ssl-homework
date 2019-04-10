@@ -27,11 +27,13 @@ const float m_attractive = 12;
 const float m_repulsive = 0.00005;
 const float MAX_ACC = 1000;
 const float MAX_SPEED = 1500;
-const float RATE = 0.5;
+//const float MAX_ACC = 3500;
+//const float MAX_SPEED = 5500;
+const float RATE = 0.2;
 //const float eta = 7500.0;  // positive constant
 //const float rou_0 = 110;  // a positive constant describing the influence range of
 //                        // the obstacle
-const float eta = 7500.0;  // positive constant
+const float eta = 8000.0;  // positive constant
 const float rou_0 = 110;  // a positive constant describing the influence range of
                         // the obstacle
 }

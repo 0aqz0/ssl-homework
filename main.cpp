@@ -54,9 +54,11 @@ int main(int argc, char *argv[])
         serial.openSerialPort();
     }
 
-    bool temp = true;
     // vel sending
     while(true){
+        if ( PARAMS::DEBUG::kMainDebug ){
+            std::cout << "[main.cpp] send velocity" << std::endl;
+        }
         std::this_thread::sleep_for(std::chrono::milliseconds(30));
         bool if_use_artifical = ApPlanner::instance()->plan(goals.front());
         if ( !if_use_artifical ){
@@ -101,6 +103,9 @@ int main(int argc, char *argv[])
         {
 //            VisualModule::instance()->drawAll(goals);
             VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
+        }
+        else{
+            VisualModule::instance()->drawPoint(MyPoint(0, -0));
         }
     }
     return a.exec();

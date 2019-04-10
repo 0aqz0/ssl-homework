@@ -8,7 +8,8 @@
 namespace {
 const float DIRECTION_ACCURACY = 2 / 180 * PARAMS::MATH::PI;
 const float DELTA_TIME = 0.03; // unit is second
-const float ACC_BUFFER = 1.5;
+const float ACC_BUFFER = 2;
+const float STOP_BUFFER = 300;
 }
 
 void PathPlanner::plan()
@@ -209,9 +210,9 @@ float PathPlanner::goToPosition1d( float me2target_dis, float me_vel){
     if ( PARAMS::DEBUG::kgoToPosition2d ){
         std::cout << "stop_dis : " << std::right << std::setw(12) << stop_dis / ACC_BUFFER
                   << ", me2target_dis: " << std::right << std::setw(12) << me2target_dis
-                  << std::endl;
+                  << "\nBUFFER: " << ACC_BUFFER << std::endl;
     }
-    if ( me2target_dis <= stop_dis + 200 ){
+    if ( me2target_dis <= stop_dis + STOP_BUFFER ){
         return me_vel - a_max * DELTA_TIME * ACC_BUFFER;
     }
     else if ( (v_max - me_vel) > a_max * DELTA_TIME ) {

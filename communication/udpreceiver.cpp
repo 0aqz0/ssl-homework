@@ -6,6 +6,7 @@
 #include "algorithm/rrt.h"
 #include "algorithm/artifical_potential.h"
 #include <thread>
+#include <iostream>
 
 UDPReceiver* UDPReceiver::_instance = 0;
 
@@ -59,6 +60,9 @@ void UDPReceiver::readDatagrams(){
             // reset
             MyDataManager::instance()->reset();
 
+            if ( PARAMS::DEBUG::kUdpReceiver){
+                std::cout << "[udpreceiver.cpp] receive message" << std::endl;
+            }
             // Read blue robot info
             int blue_size = vision.robots_blue_size();
             for (int i=0; i<blue_size; i++){
