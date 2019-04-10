@@ -11,6 +11,7 @@ public:
     float v_x = 0;
     float v_y = 0;
     float v_w = 0;
+    bool last_statue = false;
 };
 
 typedef Singleton<ArtificalPotential> ApPlanner;

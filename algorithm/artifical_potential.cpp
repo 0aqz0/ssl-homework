@@ -25,17 +25,20 @@ const float m_attractive = 12;
 //const float m_repulsive = 0.05;
 // for real
 const float m_repulsive = 0.00005;
-const float MAX_ACC = 1000;
-const float MAX_SPEED = 1500;
-//const float MAX_ACC = 3500;
-//const float MAX_SPEED = 5500;
+//const float MAX_ACC = 1000;
+//const float MAX_SPEED = 1500;
+const float MAX_ACC = 3500;
+const float MAX_SPEED = 5500;
+const float ACC_BUFFER = 2;
 const float RATE = 0.2;
+const float REP_RATE = 0.8;
 //const float eta = 7500.0;  // positive constant
 //const float rou_0 = 110;  // a positive constant describing the influence range of
 //                        // the obstacle
-const float eta = 8000.0;  // positive constant
+const float eta = 11000.0;  // positive constant
 const float rou_0 = 110;  // a positive constant describing the influence range of
                         // the obstacle
+const float DELTA_TIME  = 0.03;  // unit is second
 }
 
 // change Athena axis y up
@@ -102,6 +105,17 @@ bool ArtificalPotential::plan( MyPoint target ){
             MyVector n_ro_vertical = v_ro_vertical.Unitization();
             rou_m[i] = v_ro.mod() * v_ro.mod() / 2 / MAX_ACC;
 
+            bool if_rep;
+            if ( !last_statue )
+                if_rep = rou_s[i] - rou_m[i] < rou_0 &&
+                    rou_s[i] - rou_m[i] > 0 &&
+                    ( me_vel - yellow_vel ) * n_ro > 0;
+            else
+                if_rep = rou_s[i] - rou_m[i] < rou_0 * REP_RATE &&
+                        rou_s[i] - rou_m[i] > 0 &&
+                        ( me_vel - yellow_vel ) * n_ro > 0;
+            last_statue = false;
+
             if ( PARAMS::DEBUG::kAPDebugMessage ) {
 //                std::cout << "rou_s[i] - rou_m[i]           : "
 //                          << std::right << std::setw(12)
@@ -131,8 +145,7 @@ bool ArtificalPotential::plan( MyPoint target ){
                  ( me_vel - yellow_vel ) * n_ro <= 0 ){
 
             }
-            else if ( rou_s[i] - rou_m[i] < rou_0 && rou_s[i] - rou_m[i] > 0 &&
-                      ( me_vel - yellow_vel ) * n_ro > 0 ){
+            else if ( if_rep ){
                 f_rep1[i] = n_ro * (-1) * eta * ( 1 + v_ro.mod() / MAX_ACC ) /
                         ( rou_s[i] - rou_m[i] ) / ( rou_s[i] - rou_m[i] );
                 f_rep2[i] = n_ro_vertical *
@@ -177,6 +190,16 @@ bool ArtificalPotential::plan( MyPoint target ){
             MyVector n_ro_vertical = v_ro_vertical.Unitization();
             rou_m[i] = v_ro.mod() * v_ro.mod() / 2 / MAX_ACC;
 
+            bool if_rep;
+            if ( !last_statue )
+                if_rep = rou_s[i] - rou_m[i] < rou_0 &&
+                    rou_s[i] - rou_m[i] > 0 &&
+                    ( me_vel - blue_vel ) * n_ro > 0;
+            else
+                if_rep = rou_s[i] - rou_m[i] < rou_0 * REP_RATE &&
+                        rou_s[i] - rou_m[i] > 0 &&
+                        ( me_vel - blue_vel ) * n_ro > 0;
+            last_statue = false;
             if ( PARAMS::DEBUG::kAPDebugMessage ) {
 //                std::cout << "rou_s[i] - rou_m[i]           : "
 //                          << std::right << std::setw(12)
@@ -205,8 +228,7 @@ bool ArtificalPotential::plan( MyPoint target ){
             if ( rou_s[i] - rou_m[i] >= rou_0 ||
                  ( me_vel - blue_vel ) * n_ro <= 0 ){
             }
-            else if ( rou_s[i] - rou_m[i] < rou_0 && rou_s[i] - rou_m[i] > 0 &&
-                      ( me_vel - blue_vel ) * n_ro > 0 ){
+            else if ( if_rep ){
                 f_rep1[i] = n_ro * (-1) * eta * ( 1 + v_ro.mod() / MAX_ACC ) /
                         ( rou_s[i] - rou_m[i] ) / ( rou_s[i] - rou_m[i] );
                 f_rep2[i] = n_ro_vertical *
@@ -248,7 +270,7 @@ bool ArtificalPotential::plan( MyPoint target ){
     }
 
     MyVector next_step_vel;
-    next_step_vel = me_vel + acc_tol;
+    next_step_vel = me_vel + acc_tol * DELTA_TIME * ACC_BUFFER;
 
     if ( next_step_vel.mod() > MAX_SPEED ){
         next_step_vel = next_step_vel.Unitization() * MAX_SPEED;
