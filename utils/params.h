@@ -36,8 +36,8 @@ namespace PARAMS {
     const double ANGLE_THRESHOLD = 0.1;
     const double FORWARD_ANGLE_THRESHOLD = 0.5;
     const double ROTATE_COFF = 4;
-    const double FORWARD_SPEED = 3.5;
-    const double FORWARD_ACC = 4;
+    const double FORWARD_SPEED = 5;
+    const double FORWARD_ACC = 7.5;
     const double FORWARD_ROTATE_COFF = 3.0;
 
     //visualization module

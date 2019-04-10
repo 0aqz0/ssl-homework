@@ -9,7 +9,7 @@ namespace {
 const float DIRECTION_ACCURACY = 2 / 180 * PARAMS::MATH::PI;
 const float DELTA_TIME = 0.03; // unit is second
 const float ACC_BUFFER = 1.2;
-const float STOP_BUFFER_UP = 320;
+const float STOP_BUFFER_UP = 400;
 const float STOP_BUFFER_DOWN = 0;
 const float ROTATE = 5;
 }
