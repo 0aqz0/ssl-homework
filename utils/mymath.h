@@ -12,6 +12,7 @@ public:
     void Setx ( float x ) { _x = x; }
     void Sety ( float y ) { _y = y; }
     float mod() { return sqrt( _x * _x + _y * _y ); }
+    float dir() { return std::atan2( _y, _x ); }
     MyVector operator*( const float a ) const;
     MyVector operator-( const MyVector& v ) const;
     MyVector operator+( const MyVector& v ) const;

@@ -17,7 +17,7 @@ serialSender serial;
 PathPlanner localPlanner;
 
 // set Goals
-std::deque<MyPoint> goals = { MyPoint(250, 150), MyPoint(-250, -150)}; // -300是边界
+std::deque<MyPoint> goals = { MyPoint(-250, -150), MyPoint(250, 150)}; // -300是边界
 
 bool updateRRT()
 {
@@ -54,18 +54,15 @@ int main(int argc, char *argv[])
         serial.openSerialPort();
     }
 
+    bool temp = true;
     // vel sending
     while(true){
         std::this_thread::sleep_for(std::chrono::milliseconds(30));
         bool if_use_artifical = ApPlanner::instance()->plan(goals.front());
-        if (PARAMS::DEBUG::kMainDebug){
-            if (if_use_artifical)
-                std::cout << "[main.cpp] " << if_use_artifical << std::endl;
-        }
-        if ( !if_use_artifical  || true ){
+        if ( !if_use_artifical ){
             // update RRT
             if(updateRRT()){
-                qDebug() << "path planning!";
+//                qDebug() << "path planning!";
                 RRTPlanner::instance()->plan(MyDataManager::instance()->ourRobot().x, MyDataManager::instance()->ourRobot().y, goals.front().x(), goals.front().y());
                 localPlanner.updatePath(RRTPlanner::instance()->smoothPath);
             }
@@ -75,7 +72,7 @@ int main(int argc, char *argv[])
                 goals.pop_front();
                 localPlanner.stopMoving();
                 localPlanner.clearPath();
-                qDebug() << "Change Goal to " << goals.front().x() << goals.front().y();
+//                qDebug() << "Change Goal to " << goals.front().x() << goals.front().y();
             }
             localPlanner.plan();
             if(PARAMS::IS_SIMULATION)
@@ -100,7 +97,11 @@ int main(int argc, char *argv[])
                                   ApPlanner::instance()->v_w);
             }
         }
-        VisualModule::instance()->drawAll(goals);
+        if ( !if_use_artifical )
+        {
+//            VisualModule::instance()->drawAll(goals);
+            VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
+        }
     }
     return a.exec();
 }

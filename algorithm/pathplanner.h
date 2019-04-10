@@ -21,7 +21,8 @@ public:
     void rotateToPoint(MyPoint target);
     void goToPoint(MyPoint target);
     void goToPointTrapezoid(MyPoint target);
-    void goToPosition1d( MyPoint target );
+    float goToPosition1d( float me2target_dis, float me_vel );
+    // return unit is mm, input target unit is cm
     void goToPosition2d( MyPoint target );
     void stopMoving();
     void updatePath(std::vector<Node> &nodePath);

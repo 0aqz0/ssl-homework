@@ -2,6 +2,14 @@
 #include "communication/udpsender.h"
 #include "communication/serialsender.h"
 #include "obstacles.h"
+#include <iostream>
+#include <iomanip>
+
+namespace {
+const float DIRECTION_ACCURACY = 2 / 180 * PARAMS::MATH::PI;
+const float DELTA_TIME = 0.03; // unit is second
+const float ACC_BUFFER = 1.5;
+}
 
 void PathPlanner::plan()
 {
@@ -15,7 +23,8 @@ void PathPlanner::plan()
         qDebug() << "path size:" << path.size();
     if(path.size() > 0)
 //        goToPoint(path.front());
-        goToPointTrapezoid(path.front());
+//        goToPointTrapezoid(path.front());
+        goToPosition2d(path.front());
 }
 
 bool PathPlanner::hasArrived(MyPoint target)
@@ -131,16 +140,86 @@ void PathPlanner::goToPointTrapezoid(MyPoint target)
         velX = localvx;
         velY = localvy;
 //    }
-    velW = 0;
+//    velW = 0;
 //    qDebug() << "now goToPoint-------------ing";
 }
 
 void PathPlanner::goToPosition2d( MyPoint target ){
+    if ( PARAMS::DEBUG::kgoToPosition2d ){
+        std::cout << "\n=================  [pathplanner.cpp] debug  =========="
+                        "========" << std::endl;
+    }
+    RobotInfo& me = MyDataManager::instance()->ourRobot();
+    MyPoint me_pos( me.x * 10, me.y * 10 );
+    target.Setx( target.x() * 10 );
+    target.Sety( target.y() * 10 );
+    MyVector me2target = target - me_pos;
+    MyVector me_vel( me.vel_x, me.vel_y );
+    MyVector next_step;
 
+    float angular_bias = fabs( me_vel.dir() - me2target.dir() );
+
+    if ( me_vel.mod() < 30 ){
+        // our robot stop
+        next_step =  me_vel + me2target.Unitization() * PARAMS::FORWARD_ACC *
+                1000 * DELTA_TIME;
+    }
+
+//    else if ( angular_bias < DIRECTION_ACCURACY ){
+    else {
+        // the direction of our robot's velocity is toward target
+        float next_step_mod = 0;
+        next_step_mod = goToPosition1d( me2target.mod(), me_vel.mod() );
+        next_step = me2target.Unitization() * next_step_mod;
+    }
+
+//    else if ( angular_bias >= DIRECTION_ACCURACY &&
+//              angular_bias < PARAMS::MATH::PI ) {
+//        // The Angle between our vehicle speed and the target direction is
+//        // greater than DIRECTION_ACCURACY and is less than 90 degree
+
+//    }
+
+//    else {
+//        // The Angle between our vehicle speed and the target direction is
+//        // greater than 90 degree
+
+//    }
+    velX = next_step.x() * cos(me.orientation) - next_step.y() * sin(me.orientation);
+    velY = next_step.x() * sin(me.orientation) + next_step.y() * cos(me.orientation);
+    velX = velX / 1000;
+    velY = velY / 1000;
+    velW = 0;
+    if ( PARAMS::DEBUG::kgoToPosition2d ){
+        std::cout << "next_step : " << std::right << std::setw(12) << next_step.x()
+                  << ", next_step: " << std::right << std::setw(12) << next_step.y()
+                  << "\nme_vel_x : " << std::right << std::setw(12) << me_vel.x()
+                  << ", me_vel_y : " << std::right << std::setw(12) << me_vel.y()
+                  << std::endl;
+        std::cout << "\n=========================================================="
+                        "=====" << std::endl;
+    }
 }
 
-void PathPlanner::goToPosition1d( MyPoint target ){
+float PathPlanner::goToPosition1d( float me2target_dis, float me_vel){
+    float v_max = PARAMS::FORWARD_SPEED * 1000;
+    float a_max = PARAMS::FORWARD_ACC * 1000;
+    float stop_dis = me_vel * me_vel / 2 / a_max;
 
+    if ( PARAMS::DEBUG::kgoToPosition2d ){
+        std::cout << "stop_dis : " << std::right << std::setw(12) << stop_dis / ACC_BUFFER
+                  << ", me2target_dis: " << std::right << std::setw(12) << me2target_dis
+                  << std::endl;
+    }
+    if ( me2target_dis <= stop_dis + 200 ){
+        return me_vel - a_max * DELTA_TIME * ACC_BUFFER;
+    }
+    else if ( (v_max - me_vel) > a_max * DELTA_TIME ) {
+        return me_vel + a_max * DELTA_TIME * ACC_BUFFER;
+    }
+    else {
+        return v_max;
+    }
 }
 
 void PathPlanner::stopMoving()
