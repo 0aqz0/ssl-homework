@@ -28,7 +28,7 @@ void RRTStar::plan(double start_x, double start_y, double end_x, double end_y)
         if (inNodeList(newNode_x, newNode_y))
             continue;
         // obstacles
-        if (ObstaclesInfo::instance()->hasObstacle(newNode_x, newNode_y, CIRCLE))
+        if (ObstaclesInfo::instance()->hasObstacle(newNode_x, newNode_y, PARAMS::OBSTACLE::OBSTACLETYPE))
             continue;
 
         // choose best parent
@@ -88,7 +88,7 @@ int RRTStar::chooseBestParent(int x, int y, double radius, double old_cost)
         {
             double new_cost = nearNodes[i].cost + sqrt(pow(nearNodes[i].y - y, 2) + pow(nearNodes[i].x - x, 2));
             // check collision
-            if(ObstaclesInfo::instance()->hasObstacle(nearNodes[i].x, nearNodes[i].y, x, y, CIRCLE))
+            if(ObstaclesInfo::instance()->hasObstacle(nearNodes[i].x, nearNodes[i].y, x, y, PARAMS::OBSTACLE::OBSTACLETYPE))
                 continue;
 
             if(new_cost < old_cost){
@@ -114,7 +114,7 @@ void RRTStar::rewire(Node newNode, double radius)
     for(int i=0; i<nearNodes.size(); i++){
         double new_cost = newNode.cost + sqrt(pow(newNode.y - nearNodes[i].y, 2) + pow(newNode.x - nearNodes[i].x, 2));
         // check collision
-//        if(ObstaclesInfo::instance()->hasObstacle(nearNodes[i].x, nearNodes[i].y, newNode.x, newNode.y, CIRCLE))
+//        if(ObstaclesInfo::instance()->hasObstacle(nearNodes[i].x, nearNodes[i].y, newNode.x, newNode.y, PARAMS::OBSTACLE::OBSTACLETYPE))
 //            continue;
         if(new_cost < nearNodes[i].cost){
             nearNodes[i].cost = new_cost;
@@ -166,7 +166,7 @@ void RRTStar::pathSmooth()
     smoothPath.push_back(finalPath[0]);
     int nextPoint = 1;
     while(nextPoint < finalPath.size()){
-        while(!ObstaclesInfo::instance()->hasObstacle(smoothPath.back().x(), smoothPath.back().y(), finalPath[nextPoint+1].x(), finalPath[nextPoint+1].y(), CIRCLE) && nextPoint < finalPath.size()-1)
+        while(!ObstaclesInfo::instance()->hasObstacle(smoothPath.back().x(), smoothPath.back().y(), finalPath[nextPoint+1].x(), finalPath[nextPoint+1].y(), PARAMS::OBSTACLE::OBSTACLETYPE) && nextPoint < finalPath.size()-1)
             nextPoint++;
         smoothPath.push_back(finalPath[nextPoint]);
         nextPoint++;

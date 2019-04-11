@@ -17,7 +17,7 @@ serialSender serial;
 PathPlanner localPlanner;
 
 // set Goals
-std::deque<MyPoint> goals = { MyPoint(250, -150), MyPoint(-250, 150)}; // -300是边界
+std::deque<MyPoint> goals = { MyPoint(-200, -100), MyPoint(200, 100)}; // -300是边界
 
 bool updateRRT()
 {
@@ -29,14 +29,14 @@ bool updateRRT()
     RobotInfo& me = MyDataManager::instance()->ourRobot();
     if(localPlanner.pathSize() != 0){
         MyPoint target = localPlanner.path.front();
-        if(ObstaclesInfo::instance()->hasObstacle(me.x, me.y, target.x(), target.y(), CIRCLE))
+        if(ObstaclesInfo::instance()->hasObstacle(me.x, me.y, target.x(), target.y(), PARAMS::OBSTACLE::OBSTACLETYPE))
             update = true;
     }
     // 到了下一个点重新更新
 
     // can reach my goal directly
     MyPoint goal = goals.front();
-    if(!ObstaclesInfo::instance()->hasObstacle(me.x, me.y, goal.x(), goal.y(), CIRCLE))
+    if(!ObstaclesInfo::instance()->hasObstacle(me.x, me.y, goal.x(), goal.y(), PARAMS::OBSTACLE::OBSTACLETYPE))
         update = true;
 
     return update;
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(30));
         bool if_use_artifical = ApPlanner::instance()->plan(goals.front());
-        if ( !if_use_artifical ){
+        if ( !if_use_artifical || true){
             // update RRT
             if(updateRRT()){
 //                qDebug() << "path planning!";
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
                 // 从1开始
 //                serial.sendToReal(PARAMS::our_id, 180 * localPlanner.velX, 180 * localPlanner.velY, -40*localPlanner.velW);
                 serial.sendToReal(PARAMS::our_id, 140 * localPlanner.velX, 200 * localPlanner.velY, 0);
-                // qDebug() << "vel: "<< localPlanner.velX << localPlanner.velY << localPlanner.velW;
+//                 qDebug() << "vel: "<< localPlanner.velX << localPlanner.velY << localPlanner.velW;
                 // qDebug() << MyDataManager::instance()->ourRobot().x << MyDataManager::instance()->ourRobot().y;
         }
         else {
@@ -102,11 +102,12 @@ int main(int argc, char *argv[])
         }
         if ( !if_use_artifical )
         {
-//            VisualModule::instance()->drawAll(goals);
-            VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
+            VisualModule::instance()->drawAll(goals);
+//            VisualModule::instance()->drawLines(RRTPlanner::instance()->smoothPath);
         }
         else{
-            VisualModule::instance()->drawPoint(MyPoint(0, -0));
+//            VisualModule::instance()->drawPoint(MyPoint(0, -0));
+            VisualModule::instance()->drawAll(goals);
         }
     }
     return a.exec();

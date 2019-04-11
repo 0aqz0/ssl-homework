@@ -23,10 +23,6 @@ public:
     void drawAll(std::deque<MyPoint> goals);
 private:
     QUdpSocket* sender;
-    ZSS::Protocol::Debug_Msgs msgs;
-    ZSS::Protocol::Debug_Msg* msg;
-    ZSS::Protocol::Debug_Line* line;
-    ZSS::Protocol::Debug_Text* text;
 signals:
 
 public slots:

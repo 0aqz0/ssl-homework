@@ -32,8 +32,14 @@ void RRT::plan(double start_x, double start_y, double end_x, double end_y)
         if (inNodeList(newNode_x, newNode_y))
             continue;
         // obstacles
-        if (ObstaclesInfo::instance()->hasObstacle(newNode_x, newNode_y, CIRCLE))
+        if (ObstaclesInfo::instance()->hasObstacle(newNode_x, newNode_y, PARAMS::OBSTACLE::OBSTACLETYPE))
+        {
+//            qDebug() << "obstacle!!!";
             continue;
+
+        }
+
+
         NodeList.push_back(Node(newNode_x, newNode_y, nearestNode));
         if (sqrt(pow(newNode_x-end_x,2)+pow(newNode_y-end_y,2)) < PARAMS::RRT::STEP_SIZE){
             if(PARAMS::DEBUG::RRTDebug)
@@ -112,7 +118,7 @@ void RRT::pathSmooth()
     smoothPath.push_back(finalPath[0]);
     int nextPoint = 1;
     while(nextPoint < finalPath.size()){
-        while(nextPoint < finalPath.size()-1 && !ObstaclesInfo::instance()->hasObstacle(smoothPath.back().x(), smoothPath.back().y(), finalPath[nextPoint+1].x(), finalPath[nextPoint+1].y(), CIRCLE)){
+        while(nextPoint < finalPath.size()-1 && !ObstaclesInfo::instance()->hasObstacle(smoothPath.back().x(), smoothPath.back().y(), finalPath[nextPoint+1].x(), finalPath[nextPoint+1].y(), PARAMS::OBSTACLE::OBSTACLETYPE)){
             nextPoint++;
             if(PARAMS::DEBUG::RRTDebug)
                 qDebug() << "jump!!!";

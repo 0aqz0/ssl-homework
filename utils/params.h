@@ -11,8 +11,8 @@ namespace PARAMS {
     const int ROBOT_NUM = 12;
 
     // our car
-    const int our_id = 4;  //从1开始
-    const bool isBlue = false;
+    const int our_id = 3;  //从1开始
+    const bool isBlue =true;
 
     // field
     namespace FIELD {
@@ -21,7 +21,7 @@ namespace PARAMS {
     }
 
     // serial sender
-    const QString serialPort = "COM6";
+    const QString serialPort = "COM17";
     const int frequency = 0;
     const int TRANSMIT_PACKET_SIZE = 25;
 
@@ -36,8 +36,8 @@ namespace PARAMS {
     const double ANGLE_THRESHOLD = 0.1;
     const double FORWARD_ANGLE_THRESHOLD = 0.5;
     const double ROTATE_COFF = 4;
-    const double FORWARD_SPEED = 5;
-    const double FORWARD_ACC = 7.5;
+    const double FORWARD_SPEED = 2;//原本是5
+    const double FORWARD_ACC = 5;//原本是7.5
     const double FORWARD_ROTATE_COFF = 3.0;
 
     //visualization module
@@ -69,10 +69,12 @@ namespace PARAMS {
 
     // obstacle module
     namespace OBSTACLE {
-        const double INFLATION_RADIUS = 35.0;
-        const double INFLATION_RADIUS_SQUARE = 900;
+        //1 is CIRCLE , 2 is CAPSULE
+        const int OBSTACLETYPE = 2;
+        const double INFLATION_RADIUS = 20.0;//CAPSULE
+        const double INFLATION_RADIUS_SQUARE = 900;//CIRCLE
         const double STEP_SIZE = 10;
-        const double REFRESH_TIME = 0.1;
+        const double REFRESH_TIME = 0.02;
     }
 
     namespace DEBUG {

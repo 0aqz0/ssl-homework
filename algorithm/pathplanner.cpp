@@ -10,7 +10,7 @@ const float DIRECTION_ACCURACY = 2 / 180 * PARAMS::MATH::PI;
 const float DELTA_TIME = 0.03; // unit is second
 const float ACC_BUFFER = 1.2;
 const float STOP_BUFFER_UP = 400;
-const float STOP_BUFFER_DOWN = 0;
+const float STOP_BUFFER_DOWN = 200;
 const float ROTATE = 5;
 }
 
@@ -53,7 +53,7 @@ bool PathPlanner::moveToNext(MyPoint target)
         double distToTarget = sqrt(pow(me.x - target.x(),2) + pow(me.y - target.y(), 2))
                 + sqrt(pow(target.x() - nextTarget.x(),2) + pow(target.y() - nextTarget.y(),2));
         double distToNextTarget = sqrt(pow(me.x - nextTarget.x(),2) + pow(me.x - nextTarget.x(),2));
-        if(distToTarget > distToNextTarget && !ObstaclesInfo::instance()->hasObstacle(me.x, me.y, nextTarget.x(), nextTarget.y(), CIRCLE))
+        if(distToTarget > distToNextTarget && !ObstaclesInfo::instance()->hasObstacle(me.x, me.y, nextTarget.x(), nextTarget.y(), PARAMS::OBSTACLE::OBSTACLETYPE))
             next = true;
     }
     return next;
