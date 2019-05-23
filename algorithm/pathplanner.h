@@ -14,7 +14,7 @@
 class PathPlanner
 {
 public:
-    PathPlanner() : velX(0), velY(0), velW(0){}
+    PathPlanner();
     void plan();
     bool hasArrived(MyPoint target);
     bool moveToNext(MyPoint target);
