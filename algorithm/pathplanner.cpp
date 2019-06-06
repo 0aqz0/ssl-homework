@@ -14,20 +14,20 @@ const float STOP_BUFFER_DOWN = 200;
 const float ROTATE = 5;
 }
 
+PathPlanner::PathPlanner() : velX(0), velY(0), velW(0){
+    path = std::deque<MyPoint>{MyPoint(217,-142),MyPoint(-193, -142),MyPoint(-193,-30),MyPoint(-92,-35),MyPoint(6,-33),MyPoint(7,33),MyPoint(-230,45),MyPoint(-230,138),MyPoint(217,138)};
+}
+
 void PathPlanner::plan()
 {
-    while (path.size() > 0 && moveToNext(path.front()))
+    while (path.size() > 0 && hasArrived(path.front()))
     {
-        if(PARAMS::DEBUG::pathPlannerDebug)
-            qDebug() << "has arrived";
+        qDebug() << "has arrived";
+        path.push_back(path.front());
         path.pop_front();
     }
-    if(PARAMS::DEBUG::pathPlannerDebug)
-        qDebug() << "path size:" << path.size();
     if(path.size() > 0)
-//        goToPoint(path.front());
-//        goToPointTrapezoid(path.front());
-        goToPosition2d(path.front());
+        goToPoint(path.front());
 }
 
 bool PathPlanner::hasArrived(MyPoint target)
@@ -89,6 +89,7 @@ void PathPlanner::rotateToPoint(MyPoint target)
 
 void PathPlanner::goToPoint(MyPoint target)
 {
+    qDebug() << "go to point" << target.x() << target.y();
     if(PARAMS::DEBUG::pathPlannerDebug)
         qDebug() << "go to point";
     RobotInfo& me = MyDataManager::instance()->ourRobot();
