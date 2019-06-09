@@ -2,6 +2,7 @@
 #include "communication/udpsender.h"
 #include "communication/serialsender.h"
 #include "obstacles.h"
+#include "utils/paramloader.h"
 #include <iostream>
 #include <iomanip>
 
@@ -100,23 +101,21 @@ void PathPlanner::goToPoint(MyPoint target)
 //    qDebug() <<"angle" <<me_angle << MyDataManager::instance()->blueRobots[1].orientation << MyDataManager::instance()->blueRobots[2].orientation <<MyDataManager::instance()->blueRobots[0].orientation;
     diffAngle = diffAngle > PARAMS::MATH::PI ? 2*PARAMS::MATH::PI - diffAngle : diffAngle;
     // 计算旋转速度的绝对值
-    double rotVel = diffAngle * PARAMS::FORWARD_ROTATE_COFF; // need improve!!!
-    // 计算旋转速度的方向
-    if(me_angle > targetAngle)
-        rotVel *= -1;
-    if(fabs(me_angle - targetAngle) > PARAMS::MATH::PI)
-        rotVel *= -1;
-
-    if(fabs(diffAngle) >= PARAMS::FORWARD_ANGLE_THRESHOLD) {
+    if(fabs(diffAngle) >= PARAMS::FORWARD_ANGLE_THRESHOLD){
         velX = 0;
         velY = 0;
-        velW = rotVel;
+        velW = ParamManager::instance()->rotateSpeed;
     }
     else{
-        velX = PARAMS::FORWARD_SPEED;
+        velX = ParamManager::instance()->forwardSpeed;
         velY = 0;
-        velW = rotVel;
+        velW = diffAngle * ParamManager::instance()->forwardRotateCoff; // need improve!!!
     }
+    // 计算旋转速度的方向
+    if(me_angle > targetAngle)
+        velW *= -1;
+    if(fabs(me_angle - targetAngle) > PARAMS::MATH::PI)
+        velW *= -1;
 }
 
 void PathPlanner::goToPointTrapezoid(MyPoint target)

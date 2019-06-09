@@ -31,7 +31,8 @@ SOURCES += main.cpp \
     algorithm/rrtstar.cpp \
     algorithm/rrt.cpp \
     utils/visualizationmodule.cpp \
-    algorithm/obstacles.cpp
+    algorithm/obstacles.cpp \
+    utils/paramloader.cpp
 
 HEADERS += \
     communication\udpreceiver.h \
@@ -51,7 +52,8 @@ HEADERS += \
     algorithm/rrtstar.h \
     algorithm/rrt.h \
     utils/visualizationmodule.h \
-    algorithm/obstacles.h
+    algorithm/obstacles.h \
+    utils/paramloader.h
 
 INCLUDEPATH += \
     ..\protobuf\include

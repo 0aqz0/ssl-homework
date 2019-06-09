@@ -1,6 +1,7 @@
 #include "serialsender.h"
 #include <QDebug>
 #include "utils/params.h"
+#include "utils/paramloader.h"
 
 serialSender::serialSender()
     : startPacket1(PARAMS::TRANSMIT_PACKET_SIZE,0)
@@ -25,7 +26,7 @@ serialSender::serialSender()
 
 void serialSender::openSerialPort()
 {
-    serial.setPortName(PARAMS::serialPort);
+    serial.setPortName(ParamManager::instance()->COM);
     serial.setBaudRate(QSerialPort::Baud115200);
     serial.setDataBits(QSerialPort::Data8);
     serial.setParity(QSerialPort::NoParity);
