@@ -13,6 +13,7 @@ void paramLoader::loadParam()
 {
     QString file = QDir::currentPath() + "/" + filename;
     QFile inputFile(file);
+    qDebug() << "open file" << file;
     if(inputFile.open(QIODevice::ReadOnly)){
         qDebug() << "OPEN PARAM FILE SUCCESS";
         QTextStream in(&inputFile);

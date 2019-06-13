@@ -16,7 +16,7 @@ const float ROTATE = 5;
 }
 
 PathPlanner::PathPlanner() : velX(0), velY(0), velW(0){
-    path = std::deque<MyPoint>{MyPoint(217,-142),MyPoint(-193, -142),MyPoint(-193,-30),MyPoint(-92,-35),MyPoint(6,-33),MyPoint(7,33),MyPoint(-230,45),MyPoint(-230,138),MyPoint(217,138)};
+    path = std::deque<MyPoint>{MyPoint(185,-160),MyPoint(-176, -166),MyPoint(-193,-68),MyPoint(-60,-55),MyPoint(33,-41),MyPoint(36,31),MyPoint(-173,38),MyPoint(-173,145),MyPoint(206,146)};
 }
 
 void PathPlanner::plan()
